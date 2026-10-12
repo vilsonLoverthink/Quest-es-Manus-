@@ -4,7 +4,8 @@ const STORAGE_KEY = 'cfs31-quiz-app-v1';
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const state = {
   view: 'practice', discipline: 'all', topic: 'all', search: '', practiceIndex: 0,
-  bankPage: 1, onlyWrong: false, reviewIds: null, retryUnlocked: new Set(), simulation: null,
+  bankPage: 1, onlyWrong: false, reviewIds: null, retryUnlocked: new Set(), practiceSelections: {},
+  bankResponses: {}, bankRevealed: new Set(), simulation: null,
   saved: { answers: {}, favorites: [] }
 };
 let questions = [];
@@ -45,6 +46,17 @@ function appendMarkedText(parent, text) {
   }
   appendPlainWithBreaks(parent, value.slice(cursor));
 }
+function appendIncorrectFragment(parent, alt) {
+  const text = getText(alt?.t);
+  const fragment = getText(alt?.erro).trim();
+  const start = fragment ? text.toLocaleLowerCase('pt-BR').indexOf(fragment.toLocaleLowerCase('pt-BR')) : -1;
+  if (start < 0) { appendMarkedText(parent, text); return false; }
+  appendMarkedText(parent, text.slice(0, start));
+  const del = node('del', 'incorrect-fragment'); del.setAttribute('aria-label', 'Trecho incorreto');
+  appendMarkedText(del, text.slice(start, start + fragment.length)); parent.appendChild(del);
+  appendMarkedText(parent, text.slice(start + fragment.length));
+  return true;
+}
 function readSaved() {
   try {
     const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
@@ -83,8 +95,6 @@ function updateStats() {
   $('#stat-favorites').textContent = state.saved.favorites.length;
   $('#hero-total').textContent = questions.length;
   $('#hero-subjects').textContent = disciplines.length;
-  $('#side-count').textContent = questions.length;
-  $('#side-total').textContent = disciplines.length;
   const filtered = getFilteredQuestions();
   $('#result-count').textContent = `${filtered.length} de ${questions.length} questões`;
 }
@@ -99,20 +109,11 @@ function renderDisciplineControls() {
   topics.forEach(topic => topicSelect.add(new Option(topic, topic)));
   if (state.topic !== 'all' && !topics.includes(state.topic)) state.topic = 'all';
   topicSelect.value = state.topic;
-  const list = $('#discipline-list');
-  list.replaceChildren();
-  const all = node('button', `discipline-item${state.discipline === 'all' ? ' is-selected' : ''}`);
-  all.type = 'button'; all.dataset.subject = 'all';
-  all.setAttribute('aria-pressed', String(state.discipline === 'all'));
-  all.append(node('span', '', 'Todas as disciplinas'), node('span', '', questions.length));
-  list.appendChild(all);
-  disciplines.forEach(d => {
-    const button = node('button', `discipline-item${state.discipline === d.name ? ' is-selected' : ''}`);
-    button.type = 'button'; button.dataset.subject = d.name;
-    button.setAttribute('aria-pressed', String(state.discipline === d.name));
-    button.append(node('span', '', d.name), node('span', '', d.count));
-    list.appendChild(button);
-  });
+  const activeCount = Number(state.discipline !== 'all') + Number(state.topic !== 'all');
+  const badge = $('#active-filter-count');
+  badge.hidden = activeCount === 0;
+  badge.textContent = activeCount ? String(activeCount) : '';
+  $('#filter-trigger').setAttribute('aria-label', activeCount ? `Filtros, ${activeCount} ativos` : 'Abrir filtros');
 }
 function renderNav() {
   $$('[data-view]').forEach(button => {
@@ -154,18 +155,24 @@ function optionOrder(q, shuffle = false) {
   for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
   return arr;
 }
-function createOptions(q, order, selectedIndex = null, locked = false, revealCorrect = true) {
+function createOptions(q, order, selectedIndex = null, locked = false, revealCorrect = true, action = null) {
   const list = node('div', 'options-list');
+  const optionAction = action || (state.view === 'simulado' ? 'select-simulation' : 'select-practice');
   order.forEach((actualIndex, shownIndex) => {
     const alt = q.alts[actualIndex];
     const button = node('button', 'option-button');
-    button.type = 'button'; button.dataset.action = state.view === 'simulado' ? 'answer-simulation' : 'answer-practice';
+    button.type = 'button'; button.dataset.action = optionAction;
     button.dataset.optionIndex = actualIndex; button.disabled = locked;
+    if (optionAction.startsWith('select-')) button.setAttribute('aria-pressed', String(actualIndex === selectedIndex));
+    if (!locked && actualIndex === selectedIndex) button.classList.add('is-selected');
     if (locked && revealCorrect && alt.ok) button.classList.add('is-correct');
     if (locked && revealCorrect && actualIndex === selectedIndex && !alt.ok) button.classList.add('is-wrong');
     if (locked && !revealCorrect && actualIndex === selectedIndex) button.classList.add('is-selected');
     button.append(node('span', 'option-letter', LETTERS[shownIndex] || String(shownIndex + 1)));
-    const text = node('span', ''); appendMarkedText(text, alt.t); button.appendChild(text);
+    const text = node('span', '');
+    if (locked && revealCorrect && !alt.ok) appendIncorrectFragment(text, alt);
+    else appendMarkedText(text, alt.t);
+    button.appendChild(text);
     let status = '';
     if (locked && revealCorrect && alt.ok) status = actualIndex === selectedIndex ? 'Correta · sua resposta' : 'Correta';
     else if (locked && revealCorrect && actualIndex === selectedIndex) status = 'Sua resposta';
@@ -179,20 +186,25 @@ function feedback(q, selectedIndex) {
   const correct = q.alts[selectedIndex]?.ok === true;
   const wrap = node('section', `feedback${correct ? '' : ' is-wrong'}`);
   wrap.setAttribute('aria-live', 'polite'); wrap.tabIndex = -1;
-  wrap.appendChild(node('p', 'feedback-title', correct ? 'Resposta correta' : 'Resposta incorreta'));
+  wrap.appendChild(node('p', 'feedback-title', correct ? 'Você acertou!' : 'Você errou.'));
   if (!correct) {
+    const selected = q.alts[selectedIndex];
+    const wrong = node('p', 'feedback-copy incorrect-answer');
+    wrong.append('Trecho incorreto da alternativa marcada: ');
+    appendIncorrectFragment(wrong, selected);
+    wrap.appendChild(wrong);
     const right = q.alts.find(a => a.ok === true);
     const p = node('p', 'feedback-copy');
     p.append('A alternativa correta é: ');
     const strong = node('strong', '', getText(right?.t)); p.appendChild(strong); wrap.appendChild(p);
-    const reason = getText(q.alts[selectedIndex]?.motivo);
+    const reason = getText(selected?.motivo);
     if (reason) { const why = node('p', 'feedback-copy'); why.style.marginTop = '6px'; appendMarkedText(why, reason); wrap.appendChild(why); }
   }
   wrap.appendChild(createExplanation(q));
   return wrap;
 }
 function makeQuestionCard(q, options = {}) {
-  const { order = optionOrder(q), selectedIndex = null, locked = false, showControls = true, position = null, total = null } = options;
+  const { order = optionOrder(q), selectedIndex = null, locked = false, showControls = true, position = null, total = null, optionAction = null, submitAction = null } = options;
   const card = node('article', 'question-card');
   card.dataset.questionId = q.id;
   if (position !== null && total) {
@@ -207,7 +219,14 @@ function makeQuestionCard(q, options = {}) {
   top.append(meta, fav); card.appendChild(top);
   const body = node('div', 'question-body');
   const prompt = node('p', 'question-text'); appendMarkedText(prompt, q.enunciado); body.appendChild(prompt);
-  body.appendChild(createOptions(q, order, selectedIndex, locked, state.view !== 'simulado'));
+  body.appendChild(createOptions(q, order, selectedIndex, locked, state.view !== 'simulado', optionAction));
+  if (submitAction) {
+    const submitRow = node('div', 'answer-submit-row');
+    const submit = node('button', 'button primary', 'Conferir resposta'); submit.type = 'button';
+    submit.dataset.action = submitAction; submit.dataset.id = q.id;
+    submit.disabled = selectedIndex === null || selectedIndex === undefined || locked;
+    submitRow.appendChild(submit); body.appendChild(submitRow);
+  }
   if (locked && selectedIndex !== null && state.view !== 'simulado') {
     const result = feedback(q, selectedIndex);
     if (state.view === 'practice') {
@@ -243,10 +262,11 @@ function renderPractice() {
   state.practiceIndex = Math.max(0, Math.min(state.practiceIndex, filtered.length - 1));
   const q = filtered[state.practiceIndex];
   const practiceTitle = state.onlyWrong ? 'Revisão dos seus erros' : state.reviewIds ? 'Revisão dos erros do simulado' : 'Praticar questão por questão';
-  viewRoot.append(heading('MODO DE ESTUDO', practiceTitle, 'Responda no seu ritmo. A resolução aparece logo após a escolha.'));
+  viewRoot.append(heading('MODO DE ESTUDO', practiceTitle, 'Selecione uma alternativa e toque em “Conferir resposta” para ver o resultado.'));
   const savedAnswer = state.saved.answers[q.id];
   const locked = !!savedAnswer && !state.retryUnlocked.has(q.id);
-  viewRoot.appendChild(makeQuestionCard(q, { selectedIndex: locked ? savedAnswer.selectedIndex : null, locked, position: state.practiceIndex, total: filtered.length }));
+  const selectedIndex = locked ? savedAnswer.selectedIndex : (state.practiceSelections[q.id] ?? null);
+  viewRoot.appendChild(makeQuestionCard(q, { selectedIndex, locked, position: state.practiceIndex, total: filtered.length, optionAction: locked ? null : 'select-practice', submitAction: locked ? null : 'submit-practice' }));
 }
 function startSimulation() {
   const eligible = getFilteredQuestions();
@@ -259,7 +279,7 @@ function startSimulation() {
   const shuffle = $('#sim-shuffle')?.checked ?? true;
   const orders = {};
   selected.forEach(q => { orders[q.id] = optionOrder(q, shuffle); });
-  state.simulation = { ids: selected.map(q => q.id), orders, answers: {}, index: 0, done: false };
+  state.simulation = { ids: selected.map(q => q.id), orders, answers: {}, pending: {}, index: 0, done: false };
   setStatus(''); render(); $('.option-button',viewRoot)?.focus();
 }
 function renderSimulation() {
@@ -303,14 +323,15 @@ function renderSimulation() {
   }
   const q = questions.find(x => x.id === sim.ids[sim.index]);
   if (!q) { sim.done=true; render(); return; }
-  viewRoot.append(heading('MODO DE AVALIAÇÃO', 'Simulado em andamento', 'Responda todas ou finalize a rodada quando quiser.'));
+  viewRoot.append(heading('MODO DE AVALIAÇÃO', 'Simulado em andamento', 'Selecione, confirme e avance. O gabarito fica oculto até o fim da rodada.'));
   const status=node('div','simulation-progress'); status.append(node('span','',`Questão ${sim.index+1} de ${sim.ids.length}`),node('span','',`${Object.keys(sim.answers).length} respondida(s)`)); viewRoot.appendChild(status);
   const answer=sim.answers[q.id];
-  viewRoot.appendChild(makeQuestionCard(q,{order:sim.orders[q.id]||optionOrder(q),selectedIndex:answer?answer.selectedIndex:null,locked:!!answer,position:sim.index,total:sim.ids.length}));
+  const selectedIndex=answer?answer.selectedIndex:(sim.pending[q.id]??null);
+  viewRoot.appendChild(makeQuestionCard(q,{order:sim.orders[q.id]||optionOrder(q),selectedIndex,locked:!!answer,position:sim.index,total:sim.ids.length,optionAction:answer?null:'select-simulation',submitAction:answer?null:'submit-simulation'}));
 }
 function renderBank() {
   const filtered=getFilteredQuestions();
-  viewRoot.append(heading('CONSULTA', 'Banco de questões', 'Abra uma questão para ver alternativas, gabarito, resolução e referência.'));
+  viewRoot.append(heading('CONSULTA', 'Banco de questões', 'Abra uma questão e escolha entre responder ou consultar o gabarito.'));
   if (!filtered.length) { viewRoot.appendChild(node('div','empty-state','Nenhuma questão corresponde aos filtros.')); return; }
   const perPage=20; const pages=Math.max(1,Math.ceil(filtered.length/perPage)); state.bankPage=Math.min(state.bankPage,pages);
   const start=(state.bankPage-1)*perPage;
@@ -321,7 +342,25 @@ function renderBank() {
     main.append(meta,node('p','bank-question',q.enunciado)); summary.appendChild(main);
     const favoriteBtn=node('button',`favorite-button bank-fav${favorite(q.id)?' is-favorite':''}`); favoriteBtn.type='button'; favoriteBtn.dataset.action='toggle-favorite'; favoriteBtn.dataset.id=q.id; favoriteBtn.setAttribute('aria-label',favorite(q.id)?'Remover questão das favoritas':'Adicionar questão às favoritas'); favoriteBtn.textContent=favorite(q.id)?'★':'☆'; summary.appendChild(favoriteBtn);
     details.appendChild(summary);
-    const detail=node('div','bank-detail'); detail.appendChild(createOptions(q,optionOrder(q),null,true,true)); detail.appendChild(createExplanation(q)); details.appendChild(detail); list.appendChild(details);
+    const detail=node('div','bank-detail');
+    const response=state.bankResponses[q.id];
+    if(response?.submitted){
+      detail.appendChild(createOptions(q,optionOrder(q),response.selectedIndex,true,true,'view-key'));
+      detail.appendChild(feedback(q,response.selectedIndex));
+      const again=node('button','button','Responder novamente');again.type='button';again.dataset.action='retry-bank-answer';again.dataset.id=q.id;detail.appendChild(again);
+    }else if(response?.active){
+      detail.appendChild(createOptions(q,optionOrder(q),response.selectedIndex,false,false,'select-bank-answer'));
+      const actions=node('div','bank-answer-actions');const submit=node('button','button primary','Conferir resposta');submit.type='button';submit.dataset.action='submit-bank-answer';submit.dataset.id=q.id;submit.disabled=response.selectedIndex===null||response.selectedIndex===undefined;
+      const cancel=node('button','button','Cancelar');cancel.type='button';cancel.dataset.action='cancel-bank-answer';cancel.dataset.id=q.id;actions.append(submit,cancel);detail.appendChild(actions);
+    }else if(state.bankRevealed.has(q.id)){
+      detail.appendChild(createOptions(q,optionOrder(q),null,true,true,'view-key'));detail.appendChild(createExplanation(q));
+      const hide=node('button','button','Ocultar gabarito');hide.type='button';hide.dataset.action='hide-bank-key';hide.dataset.id=q.id;detail.appendChild(hide);
+    }else{
+      detail.appendChild(node('p','bank-prompt','Escolha uma ação. Abrir esta questão não registra uma resposta.'));
+      const actions=node('div','bank-answer-actions');const answer=node('button','button primary','Responder questão');answer.type='button';answer.dataset.action='start-bank-answer';answer.dataset.id=q.id;
+      const key=node('button','button','Consultar gabarito e resolução');key.type='button';key.dataset.action='reveal-bank-key';key.dataset.id=q.id;actions.append(answer,key);detail.appendChild(actions);
+    }
+    details.appendChild(detail); list.appendChild(details);
   });
   viewRoot.appendChild(list);
   if(pages>1){const nav=node('div','pagination');const prev=node('button','button','Anterior');prev.type='button';prev.dataset.action='bank-page';prev.dataset.page=state.bankPage-1;prev.disabled=state.bankPage<=1;const next=node('button','button','Próxima');next.type='button';next.dataset.action='bank-page';next.dataset.page=state.bankPage+1;next.disabled=state.bankPage>=pages;nav.append(prev,node('span','','Página '+state.bankPage+' de '+pages),next);viewRoot.appendChild(nav);}
@@ -362,23 +401,53 @@ function recordAnswer(q,index) {
   history.push({selectedIndex:index,correct,at});
   state.saved.answers[q.id]={selectedIndex:index,correct,at,history};save();
 }
-function answerPractice(index) {
-  const list=getFilteredQuestions();const q=list[state.practiceIndex];if(!q)return;
-  recordAnswer(q,index);state.retryUnlocked.delete(q.id);render();$('.feedback',viewRoot)?.focus();
+function focusOption(action,id,index) {
+  $$('.option-button',viewRoot).find(button=>button.dataset.action===action&&Number(button.dataset.optionIndex)===index&&(!id||button.closest('[data-question-id]')?.dataset.questionId===id))?.focus();
 }
-function answerSimulation(index) {
+function selectPractice(index) {
+  const q=getFilteredQuestions()[state.practiceIndex];if(!q||!q.alts[index])return;
+  state.practiceSelections[q.id]=index;render();focusOption('select-practice',q.id,index);
+}
+function submitPractice(id) {
+  const q=questions.find(item=>item.id===id);const index=state.practiceSelections[id];if(!q||index===undefined)return;
+  recordAnswer(q,index);delete state.practiceSelections[id];state.retryUnlocked.delete(q.id);render();$('.feedback',viewRoot)?.focus();
+}
+function selectSimulation(index) {
   const sim=state.simulation;if(!sim||sim.done)return;
-  const q=questions.find(x=>x.id===sim.ids[sim.index]);if(!q||sim.answers[q.id])return;
-  const correct=q.alts[index]?.ok===true;sim.answers[q.id]={selectedIndex:index,correct};recordAnswer(q,index);render();
+  const q=questions.find(item=>item.id===sim.ids[sim.index]);if(!q||sim.answers[q.id]||!q.alts[index])return;
+  sim.pending[q.id]=index;render();focusOption('select-simulation',q.id,index);
+}
+function submitSimulation(id) {
+  const sim=state.simulation;const q=questions.find(item=>item.id===id);const index=sim?.pending[id];
+  if(!sim||sim.done||!q||index===undefined||sim.answers[id])return;
+  sim.answers[id]={selectedIndex:index,correct:q.alts[index]?.ok===true};delete sim.pending[id];recordAnswer(q,index);render();
   const next=$('[data-action="next-question"]',viewRoot);(next&&!next.disabled?next:$('[data-action="finish-simulation"]',viewRoot))?.focus();
 }
 function resetSimulation(){state.simulation=null;render();}
+function renderBankPreservingOpen(id, focusAction = null, optionIndex = null) {
+  const openIds=new Set($$('.bank-entry[open]',viewRoot).map(entry=>entry.dataset.questionId));if(id)openIds.add(id);
+  render();
+  $$('.bank-entry',viewRoot).forEach(entry=>{if(openIds.has(entry.dataset.questionId))entry.open=true;});
+  if(!id)return;
+  const entry=$$('.bank-entry',viewRoot).find(item=>item.dataset.questionId===id);if(!entry)return;
+  const target=focusAction==='feedback'?$('.feedback',entry):focusAction==='first-option'?$('.option-button',entry):$$('[data-action]',entry).find(button=>button.dataset.action===focusAction&&(optionIndex===null||Number(button.dataset.optionIndex)===optionIndex));
+  target?.focus();
+}
 function handleAction(button) {
   const action=button.dataset.action;
   if(action==='toggle-favorite'){const card=button.closest('[data-question-id]');const id=button.dataset.id||card?.dataset.questionId;if(id)toggleFavorite(id);else{const q=state.view==='simulado'&&state.simulation?questions.find(x=>x.id===state.simulation.ids[state.simulation.index]):getFilteredQuestions()[state.practiceIndex];if(q)toggleFavorite(q.id);}return;}
   if(action==='retry-question'){state.retryUnlocked.add(button.dataset.id);render();$('.option-button',viewRoot)?.focus();return;}
-  if(action==='answer-practice'){answerPractice(Number(button.dataset.optionIndex));return;}
-  if(action==='answer-simulation'){answerSimulation(Number(button.dataset.optionIndex));return;}
+  if(action==='select-practice'){selectPractice(Number(button.dataset.optionIndex));return;}
+  if(action==='submit-practice'){submitPractice(button.dataset.id);return;}
+  if(action==='select-simulation'){selectSimulation(Number(button.dataset.optionIndex));return;}
+  if(action==='submit-simulation'){submitSimulation(button.dataset.id);return;}
+  if(action==='start-bank-answer'){state.bankResponses[button.dataset.id]={active:true,selectedIndex:null,submitted:false};state.bankRevealed.delete(button.dataset.id);renderBankPreservingOpen(button.dataset.id,'first-option');return;}
+  if(action==='select-bank-answer'){const id=button.closest('[data-question-id]')?.dataset.questionId;const response=state.bankResponses[id];if(response?.active&&!response.submitted){response.selectedIndex=Number(button.dataset.optionIndex);renderBankPreservingOpen(id,'select-bank-answer',response.selectedIndex);}return;}
+  if(action==='submit-bank-answer'){const id=button.dataset.id;const response=state.bankResponses[id];const q=questions.find(item=>item.id===id);if(!q||!response?.active||response.selectedIndex===null||response.selectedIndex===undefined)return;response.submitted=true;recordAnswer(q,response.selectedIndex);renderBankPreservingOpen(id,'feedback');return;}
+  if(action==='retry-bank-answer'){state.bankResponses[button.dataset.id]={active:true,selectedIndex:null,submitted:false};renderBankPreservingOpen(button.dataset.id,'first-option');return;}
+  if(action==='cancel-bank-answer'){delete state.bankResponses[button.dataset.id];renderBankPreservingOpen(button.dataset.id,'start-bank-answer');return;}
+  if(action==='reveal-bank-key'){state.bankResponses[button.dataset.id]=null;state.bankRevealed.add(button.dataset.id);renderBankPreservingOpen(button.dataset.id,'hide-bank-key');return;}
+  if(action==='hide-bank-key'){state.bankRevealed.delete(button.dataset.id);renderBankPreservingOpen(button.dataset.id,'reveal-bank-key');return;}
   if(action==='prev-question'){if(state.view==='simulado'&&state.simulation)state.simulation.index=Math.max(0,state.simulation.index-1);else state.practiceIndex=Math.max(0,state.practiceIndex-1);render();$('[data-action="prev-question"]',viewRoot)?.focus();return;}
   if(action==='next-question'){if(state.view==='simulado'&&state.simulation)state.simulation.index=Math.min(state.simulation.ids.length-1,state.simulation.index+1);else state.practiceIndex=Math.min(getFilteredQuestions().length-1,state.practiceIndex+1);render();$('[data-action="next-question"]',viewRoot)?.focus();return;}
   if(action==='start-simulation'){startSimulation();return;}
@@ -393,9 +462,9 @@ function handleAction(button) {
 }
 document.addEventListener('click',event=>{
   const tab=event.target.closest('[data-view]');if(tab){state.view=tab.dataset.view;state.onlyWrong=false;state.reviewIds=null;state.bankPage=1;render();return;}
-  const subject=event.target.closest('[data-subject]');if(subject){state.discipline=subject.dataset.subject;state.topic='all';state.practiceIndex=0;state.bankPage=1;state.onlyWrong=false;state.reviewIds=null;$('#discipline-filter').value=state.discipline;render();$('.discipline-item[aria-pressed="true"]')?.focus();return;}
   const action=event.target.closest('[data-action]');if(action){if(action.dataset.action==='toggle-favorite'&&action.closest('summary'))event.preventDefault();handleAction(action);}
 });
+$('#clear-filters').addEventListener('click',()=>{state.discipline='all';state.topic='all';state.search='';state.onlyWrong=false;state.reviewIds=null;state.practiceIndex=0;state.bankPage=1;$('#question-search').value='';$('#filter-control').open=false;render();});
 $('#discipline-filter').addEventListener('change',event=>{state.discipline=event.target.value;state.topic='all';state.practiceIndex=0;state.bankPage=1;state.onlyWrong=false;state.reviewIds=null;render();});
 $('#topic-filter').addEventListener('change',event=>{state.topic=event.target.value;state.practiceIndex=0;state.bankPage=1;render();});
 $('#question-search').addEventListener('input',event=>{state.search=event.target.value;state.practiceIndex=0;state.bankPage=1;render();});

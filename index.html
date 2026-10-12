@@ -47,22 +47,6 @@
     </section>
 
     <div class="workspace">
-      <aside class="side-panel" aria-label="Filtros e disciplinas">
-        <div class="side-heading"><span class="side-kicker">NAVEGAR</span><span class="side-count" id="side-count">—</span></div>
-        <label class="field-label" for="discipline-filter">Disciplina</label>
-        <select id="discipline-filter" class="select-control">
-          <option value="all">Todas as disciplinas</option>
-        </select>
-        <label class="field-label topic-filter-label" for="topic-filter">Assunto</label>
-        <select id="topic-filter" class="select-control">
-          <option value="all">Todos os assuntos</option>
-        </select>
-        <div class="side-divider"></div>
-        <div class="side-heading"><span class="side-kicker">DISCIPLINAS</span><span class="side-count" id="side-total">—</span></div>
-        <div id="discipline-list" class="discipline-list"></div>
-        <div class="side-footer"><span class="side-footer-dot"></span> Conteúdo carregado do arquivo enviado</div>
-      </aside>
-
       <section class="content-panel" aria-label="Área de estudo">
         <div class="content-toolbar">
           <div class="search-box">
@@ -71,6 +55,19 @@
             <input id="question-search" type="search" autocomplete="off" placeholder="Buscar questão, assunto ou alternativa…">
             <kbd>/</kbd>
           </div>
+          <details class="filter-control" id="filter-control">
+            <summary class="filter-trigger" id="filter-trigger" aria-controls="filter-popover">
+              <span aria-hidden="true">☷</span><span>Filtros</span><span class="active-filter-count" id="active-filter-count" hidden></span>
+            </summary>
+            <div class="filter-popover" id="filter-popover">
+              <p class="filter-popover-title">Refinar questões</p>
+              <label class="field-label" for="discipline-filter">Disciplina</label>
+              <select id="discipline-filter" class="select-control"><option value="all">Todas as disciplinas</option></select>
+              <label class="field-label topic-filter-label" for="topic-filter">Assunto</label>
+              <select id="topic-filter" class="select-control"><option value="all">Todos os assuntos</option></select>
+              <button class="filter-clear" id="clear-filters" type="button">Limpar filtros</button>
+            </div>
+          </details>
           <div class="result-count" id="result-count">Carregando o banco…</div>
         </div>
         <div id="load-status" class="load-status" role="status" aria-live="polite">Preparando as questões…</div>

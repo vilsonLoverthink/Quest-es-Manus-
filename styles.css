@@ -11,3 +11,37 @@
 .option-button.is-selected{border-color:#9a874e;background:#f8f2df}
 .option-button.is-selected .option-letter{background:#806a34;color:#fff}
 @media(max-width:680px){.option-status{font-size:9px}}
+
+/* Atualização: barra de filtros compacta e resposta por confirmação explícita. */
+.workspace{grid-template-columns:minmax(0,1fr)}
+.content-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"search filter count";align-items:center;gap:12px;position:relative}
+.search-box{grid-area:search;width:100%;max-width:none}
+.filter-control{grid-area:filter;position:relative;z-index:12}
+.filter-trigger{display:flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 13px;border:1px solid var(--line-dark);border-radius:10px;background:#fff;color:var(--forest);font-size:12px;font-weight:700;cursor:pointer;list-style:none;white-space:nowrap}
+.filter-trigger::-webkit-details-marker{display:none}
+.filter-trigger:hover,.filter-control[open] .filter-trigger{border-color:var(--forest-2);background:#f4f7f3}
+.filter-trigger:focus-visible,.filter-clear:focus-visible,.bank-answer-actions .button:focus-visible,.answer-submit-row .button:focus-visible{outline:3px solid rgba(38,115,82,.3);outline-offset:2px}
+.active-filter-count{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:var(--amber);color:#18231f;font-size:10px}
+.filter-popover{display:none;position:absolute;top:calc(100% + 8px);right:0;width:min(330px,calc(100vw - 36px));padding:17px;border:1px solid var(--line);border-radius:13px;background:var(--white);box-shadow:0 18px 42px rgba(16,45,39,.17)}
+.filter-control[open] .filter-popover{display:grid;gap:8px}
+.filter-popover-title{margin:0 0 3px;font-family:var(--serif);font-size:17px;font-weight:600;color:var(--forest)}
+.filter-popover .field-label{margin:3px 0 0}
+.filter-popover .select-control{font-size:13px}
+.filter-clear{justify-self:start;padding:7px 0;border:0;background:transparent;color:var(--forest-2);font-size:11px;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.result-count{grid-area:count}
+.answer-submit-row{display:flex;justify-content:flex-end;margin-top:12px}
+.bank-answer-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 3px}
+.bank-prompt{margin:3px 0 9px;color:var(--muted);font-size:12px}
+.feedback.is-wrong .incorrect-answer{margin:0 0 7px}
+.incorrect-fragment{padding:0 2px;border-radius:2px;background:#f7d9d4;color:#8f3128;text-decoration:line-through;text-decoration-color:#a43c32;text-decoration-thickness:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+@media(max-width:680px){
+  .workspace{display:flex;flex-direction:column}
+  .content-toolbar{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"filter count" "search search";gap:9px;margin-bottom:14px}
+  .filter-trigger{min-height:39px;padding:0 12px}
+  .result-count{text-align:right}
+  .filter-popover{right:auto;left:0;max-width:calc(100vw - 28px)}
+  .answer-submit-row{justify-content:stretch}
+  .answer-submit-row .button{width:100%}
+  .bank-answer-actions{display:grid;grid-template-columns:1fr}
+  .bank-answer-actions .button{width:100%}
+}
