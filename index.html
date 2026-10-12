@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102d27">
+  <meta name="description" content="Banco interativo de questões do CFS 31: pratique, faça simulados e acompanhe seu progresso.">
+  <title>Banco de Questões — CFS 31</title>
+  <link rel="icon" type="image/jpeg" href="assets/brazil-flag.jpg">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Banco de Questões CFS 31, início">
+      <span class="brand-mark"><span>31</span></span>
+      <span class="brand-name"><strong>BIZUS DE PROVA</strong><small>CFS 31 · BANCO DE QUESTÕES</small></span>
+      <img class="flag" src="assets/brazil-flag.jpg" alt="" width="33" height="23">
+    </a>
+    <nav class="main-nav" aria-label="Navegação principal">
+      <button class="nav-tab is-active" type="button" aria-current="page" data-view="practice">Praticar</button>
+      <button class="nav-tab" type="button" data-view="simulado">Simulado</button>
+      <button class="nav-tab" type="button" data-view="bank">Banco</button>
+      <button class="nav-tab" type="button" data-view="progress">Meu progresso</button>
+    </nav>
+  </header>
+
+  <main id="inicio" class="page-shell">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> CADERNO DE TREINO · CFS 31</p>
+        <h1 id="hero-title">Estude. <em>Responda.</em><br>Avance com confiança.</h1>
+        <p>Uma versão interativa das questões enviadas: prática imediata, simulados e acompanhamento privado do seu progresso.</p>
+      </div>
+      <div class="hero-score" aria-label="Quantidade de questões e disciplinas">
+        <div class="hero-score-ring"><span id="hero-total">—</span><small>questões</small></div>
+        <div class="hero-subjects"><strong id="hero-subjects">—</strong><span>disciplinas</span></div>
+      </div>
+      <div class="hero-index" aria-hidden="true">CFS<br><b>31</b></div>
+    </section>
+
+    <section class="quick-stats" aria-label="Resumo do seu progresso">
+      <div class="quick-stat"><span class="stat-mark stat-mark-dark"></span><div><strong id="stat-attempted">0</strong><small>tentativas</small></div></div>
+      <div class="quick-stat"><span class="stat-mark stat-mark-amber"></span><div><strong id="stat-accuracy">—</strong><small>aproveitamento</small></div></div>
+      <div class="quick-stat"><span class="stat-mark stat-mark-outline"></span><div><strong id="stat-favorites">0</strong><small>favoritas</small></div></div>
+      <div class="quick-stat"><span class="quick-note">Seu progresso fica salvo somente neste navegador.</span></div>
+    </section>
+
+    <div class="workspace">
+      <aside class="side-panel" aria-label="Filtros e disciplinas">
+        <div class="side-heading"><span class="side-kicker">NAVEGAR</span><span class="side-count" id="side-count">—</span></div>
+        <label class="field-label" for="discipline-filter">Disciplina</label>
+        <select id="discipline-filter" class="select-control">
+          <option value="all">Todas as disciplinas</option>
+        </select>
+        <label class="field-label topic-filter-label" for="topic-filter">Assunto</label>
+        <select id="topic-filter" class="select-control">
+          <option value="all">Todos os assuntos</option>
+        </select>
+        <div class="side-divider"></div>
+        <div class="side-heading"><span class="side-kicker">DISCIPLINAS</span><span class="side-count" id="side-total">—</span></div>
+        <div id="discipline-list" class="discipline-list"></div>
+        <div class="side-footer"><span class="side-footer-dot"></span> Conteúdo carregado do arquivo enviado</div>
+      </aside>
+
+      <section class="content-panel" aria-label="Área de estudo">
+        <div class="content-toolbar">
+          <div class="search-box">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <label class="visually-hidden" for="question-search">Buscar questão, assunto ou alternativa</label>
+            <input id="question-search" type="search" autocomplete="off" placeholder="Buscar questão, assunto ou alternativa…">
+            <kbd>/</kbd>
+          </div>
+          <div class="result-count" id="result-count">Carregando o banco…</div>
+        </div>
+        <div id="load-status" class="load-status" role="status" aria-live="polite">Preparando as questões…</div>
+        <div id="app-view" class="app-view" aria-live="polite"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Material de estudo.</strong> Questões, gabaritos e resoluções foram preservados do arquivo recebido. Confira a apostila e a legislação vigente; este protótipo não valida atualizações normativas.</p>
+    <span>Dados e progresso permanecem neste dispositivo.</span>
+  </footer>
+</body>
+</html>
