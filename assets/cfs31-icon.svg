@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Questões Manus CFS 31</title>
+  <rect width="512" height="512" rx="112" fill="#102d27"/>
+  <path d="M256 55 392 105v113c0 104-58 177-136 230-78-53-136-126-136-230V105z" fill="#173c33" stroke="#d5a646" stroke-width="11"/>
+  <path d="M256 98 356 135v82c0 74-38 132-100 177-62-45-100-103-100-177v-82z" fill="none" stroke="#f1d18b" stroke-opacity=".42" stroke-width="3"/>
+  <text x="256" y="261" fill="#f4d17a" font-family="Georgia,serif" font-size="132" font-weight="700" text-anchor="middle">31</text>
+  <path d="M171 322c28-15 55-14 85 3v70c-30-16-57-17-85-3z" fill="#f4f2ec" stroke="#d5a646" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M341 322c-28-15-55-14-85 3v70c30-16 57-17 85-3z" fill="#fffefa" stroke="#d5a646" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M256 325v70" stroke="#d5a646" stroke-width="4"/>
+  <path d="M188 340c18-7 34-7 51 0m-51 16c18-7 34-7 51 0m86-16c-18-7-34-7-51 0m51 16c-18-7-34-7-51 0" fill="none" stroke="#9aa79d" stroke-width="4" stroke-linecap="round"/>
+</svg>

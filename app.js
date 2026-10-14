@@ -3,13 +3,15 @@ const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const STORAGE_KEY = 'cfs31-quiz-app-v1';
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const state = {
-  view: 'practice', discipline: 'all', topic: 'all', search: '', practiceIndex: 0,
-  bankPage: 1, onlyWrong: false, reviewIds: null, retryUnlocked: new Set(), practiceSelections: {},
+  view: 'practice', collection: 'all', discipline: 'all', topic: 'all', search: '', practiceIndex: 0,
+  bankPage: 1, bankStatus: 'active', onlyWrong: false, reviewIds: null, retryUnlocked: new Set(), practiceSelections: {},
   bankResponses: {}, bankRevealed: new Set(), simulation: null,
+  readerQuestionId: null, readerFontScale: 1,
   saved: { answers: {}, favorites: [] }
 };
 let questions = [];
 let disciplines = [];
+const READER_STORAGE_KEY = 'cfs31-quiz-reader-v1';
 const viewRoot = $('#app-view');
 
 function node(tag, className, text) {
@@ -71,15 +73,44 @@ function setStatus(message = '') {
   $('#load-status').textContent = message;
 }
 function favorite(id) { return state.saved.favorites.includes(id); }
-function getFilteredQuestions() {
+function collectionOf(q) { return q.colecao || 'Apostilas CFS 31'; }
+function effectiveCorrectIndex(q) {
+  const index = window.CFS31AnswerKeys?.correctIndex(q);
+  return Number.isInteger(index) ? index : (Array.isArray(q?.alts) ? q.alts.findIndex(option => option?.ok === true) : -1);
+}
+function hasCorrectKey(q) { return effectiveCorrectIndex(q) >= 0; }
+function isQuestionArchived(q) {
+  return Boolean(q?.archived || window.CFS31QuestionCollab?.currentState(q?.id)?.archived);
+}
+function readReaderSettings() {
+  try {
+    const value = JSON.parse(localStorage.getItem(READER_STORAGE_KEY) || '{}');
+    return { questionId: typeof value.questionId === 'string' ? value.questionId : null, fontScale: Number.isFinite(value.fontScale) ? Math.max(.85, Math.min(1.5, value.fontScale)) : 1 };
+  } catch { return { questionId: null, fontScale: 1 }; }
+}
+function saveReaderSettings() {
+  try { localStorage.setItem(READER_STORAGE_KEY, JSON.stringify({ questionId: state.readerQuestionId, fontScale: state.readerFontScale })); }
+  catch { /* A leitura continua; apenas a posição não será lembrada pelo navegador. */ }
+}
+function getFilteredQuestions({ mode = state.view } = {}) {
   const needle = normalize(state.search.trim());
   return questions.filter(q => {
+    const archived = isQuestionArchived(q);
+    const hasKey = hasCorrectKey(q);
+    if (mode === 'bank') {
+      if (state.bankStatus === 'pending' && (archived || hasKey)) return false;
+      if (state.bankStatus === 'archived' && !archived) return false;
+      if (state.bankStatus === 'active' && archived) return false;
+    } else if (mode === 'reader') {
+      if (archived) return false;
+    } else if (archived || !hasKey) return false;
+    if (state.collection !== 'all' && collectionOf(q) !== state.collection) return false;
     if (state.discipline !== 'all' && q.disc !== state.discipline) return false;
     if (state.topic !== 'all' && (q.assunto || 'Geral') !== state.topic) return false;
     if (state.reviewIds && !state.reviewIds.includes(q.id)) return false;
     if (state.onlyWrong && (!state.saved.answers[q.id] || state.saved.answers[q.id].correct)) return false;
     if (!needle) return true;
-    const searchable = normalize([q.disc, q.assunto, q.enunciado, q.resolucao, getText(q.base), ...(q.alts || []).map(a => a.t)].join(' '));
+    const searchable = normalize([collectionOf(q), q.origem, q.disc, q.assunto, q.enunciado, q.resolucao, getText(q.base), ...(q.alts || []).map(a => a.t)].join(' '));
     return searchable.includes(needle);
   });
 }
@@ -99,17 +130,27 @@ function updateStats() {
   $('#result-count').textContent = `${filtered.length} de ${questions.length} questões`;
 }
 function renderDisciplineControls() {
+  const collectionSelect = $('#collection-filter');
+  const collections = [...new Set(questions.map(collectionOf))].sort((a,b) => a.localeCompare(b,'pt-BR'));
+  collectionSelect.replaceChildren(new Option('Todas as coleções', 'all'));
+  collections.forEach(name => collectionSelect.add(new Option(`${name} (${questions.filter(q => collectionOf(q) === name).length})`, name)));
+  if (state.collection !== 'all' && !collections.includes(state.collection)) state.collection = 'all';
+  collectionSelect.value = state.collection;
+  const inCollection = questions.filter(q => state.collection === 'all' || collectionOf(q) === state.collection);
   const select = $('#discipline-filter');
   select.replaceChildren(new Option('Todas as disciplinas', 'all'));
-  disciplines.forEach(d => select.add(new Option(`${d.name} (${d.count})`, d.name)));
+  const availableDisciplines = [...new Set(inCollection.map(q => q.disc))].sort((a,b) => a.localeCompare(b,'pt-BR'));
+  availableDisciplines.forEach(name => select.add(new Option(`${name} (${inCollection.filter(q => q.disc === name).length})`, name)));
+  if (state.discipline !== 'all' && !availableDisciplines.includes(state.discipline)) state.discipline = 'all';
   select.value = state.discipline;
   const topicSelect = $('#topic-filter');
-  const topics = [...new Set(questions.filter(q => state.discipline === 'all' || q.disc === state.discipline).map(q => q.assunto || 'Geral'))].sort((a,b) => a.localeCompare(b,'pt-BR'));
+  const topics = [...new Set(inCollection.filter(q => state.discipline === 'all' || q.disc === state.discipline).map(q => q.assunto || 'Geral'))].sort((a,b) => a.localeCompare(b,'pt-BR'));
   topicSelect.replaceChildren(new Option('Todos os assuntos', 'all'));
   topics.forEach(topic => topicSelect.add(new Option(topic, topic)));
   if (state.topic !== 'all' && !topics.includes(state.topic)) state.topic = 'all';
   topicSelect.value = state.topic;
-  const activeCount = Number(state.discipline !== 'all') + Number(state.topic !== 'all');
+  $('#bank-status-filter').value = state.bankStatus;
+  const activeCount = Number(state.collection !== 'all') + Number(state.discipline !== 'all') + Number(state.topic !== 'all') + Number(state.bankStatus !== 'active');
   const badge = $('#active-filter-count');
   badge.hidden = activeCount === 0;
   badge.textContent = activeCount ? String(activeCount) : '';
@@ -143,9 +184,23 @@ function createExplanation(q) {
     const p = node('p'); appendMarkedText(p, q.resolucao); wrap.appendChild(p);
   }
   const base = getText(q.base);
-  if (base) {
+  if (base || q.source_url) {
     wrap.appendChild(node('h3', '', 'Referência'));
-    const p = node('p'); appendMarkedText(p, base); wrap.appendChild(p);
+    const p = node('p');
+    if (base) appendMarkedText(p, base);
+    if (q.source_url) {
+      try {
+        const url = new URL(String(q.source_url));
+        if (url.protocol === 'https:' || url.protocol === 'http:') {
+          if (base) p.append(' · ');
+          const link = node('a', 'source-link', 'Abrir fonte');
+          link.href = url.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+          link.setAttribute('aria-label', `Abrir fonte: ${q.validation?.source_title || 'referência da questão'} (nova aba)`);
+          p.appendChild(link);
+        }
+      } catch { /* Ignora URLs inválidas; a citação textual continua disponível. */ }
+    }
+    wrap.appendChild(p);
   }
   return wrap;
 }
@@ -158,23 +213,25 @@ function optionOrder(q, shuffle = false) {
 function createOptions(q, order, selectedIndex = null, locked = false, revealCorrect = true, action = null) {
   const list = node('div', 'options-list');
   const optionAction = action || (state.view === 'simulado' ? 'select-simulation' : 'select-practice');
+  const correctIndex = effectiveCorrectIndex(q);
   order.forEach((actualIndex, shownIndex) => {
     const alt = q.alts[actualIndex];
+    const isCorrect = actualIndex === correctIndex;
     const button = node('button', 'option-button');
     button.type = 'button'; button.dataset.action = optionAction;
     button.dataset.optionIndex = actualIndex; button.disabled = locked;
     if (optionAction.startsWith('select-')) button.setAttribute('aria-pressed', String(actualIndex === selectedIndex));
     if (!locked && actualIndex === selectedIndex) button.classList.add('is-selected');
-    if (locked && revealCorrect && alt.ok) button.classList.add('is-correct');
-    if (locked && revealCorrect && actualIndex === selectedIndex && !alt.ok) button.classList.add('is-wrong');
+    if (locked && revealCorrect && isCorrect) button.classList.add('is-correct');
+    if (locked && revealCorrect && actualIndex === selectedIndex && !isCorrect) button.classList.add('is-wrong');
     if (locked && !revealCorrect && actualIndex === selectedIndex) button.classList.add('is-selected');
     button.append(node('span', 'option-letter', LETTERS[shownIndex] || String(shownIndex + 1)));
     const text = node('span', '');
-    if (locked && revealCorrect && !alt.ok) appendIncorrectFragment(text, alt);
+    if (locked && revealCorrect && !isCorrect) appendIncorrectFragment(text, alt);
     else appendMarkedText(text, alt.t);
     button.appendChild(text);
     let status = '';
-    if (locked && revealCorrect && alt.ok) status = actualIndex === selectedIndex ? 'Correta · sua resposta' : 'Correta';
+    if (locked && revealCorrect && isCorrect) status = actualIndex === selectedIndex ? 'Correta · sua resposta' : 'Correta';
     else if (locked && revealCorrect && actualIndex === selectedIndex) status = 'Sua resposta';
     else if (locked && !revealCorrect && actualIndex === selectedIndex) status = 'Resposta registrada';
     if (status) button.appendChild(node('strong', 'option-status', status));
@@ -183,9 +240,15 @@ function createOptions(q, order, selectedIndex = null, locked = false, revealCor
   return list;
 }
 function feedback(q, selectedIndex) {
-  const correct = q.alts[selectedIndex]?.ok === true;
+  const correctIndex = effectiveCorrectIndex(q);
+  const correct = correctIndex >= 0 && selectedIndex === correctIndex;
   const wrap = node('section', `feedback${correct ? '' : ' is-wrong'}`);
   wrap.setAttribute('aria-live', 'polite'); wrap.tabIndex = -1;
+  if (correctIndex < 0) {
+    wrap.appendChild(node('p', 'feedback-title', 'Gabarito ainda não cadastrado.'));
+    wrap.appendChild(node('p', 'feedback-copy', 'Esta questão permanece fora da prática pontuada até que a turma cadastre uma resposta fundamentada.'));
+    return wrap;
+  }
   wrap.appendChild(node('p', 'feedback-title', correct ? 'Você acertou!' : 'Você errou.'));
   if (!correct) {
     const selected = q.alts[selectedIndex];
@@ -193,7 +256,7 @@ function feedback(q, selectedIndex) {
     wrong.append('Trecho incorreto da alternativa marcada: ');
     appendIncorrectFragment(wrong, selected);
     wrap.appendChild(wrong);
-    const right = q.alts.find(a => a.ok === true);
+    const right = q.alts[correctIndex];
     const p = node('p', 'feedback-copy');
     p.append('A alternativa correta é: ');
     const strong = node('strong', '', getText(right?.t)); p.appendChild(strong); wrap.appendChild(p);
@@ -213,6 +276,7 @@ function makeQuestionCard(q, options = {}) {
   }
   const top = node('div', 'question-top');
   const meta = node('div', 'question-meta');
+  if (collectionOf(q) !== 'Apostilas CFS 31') meta.append(node('span', 'pill collection', collectionOf(q)));
   meta.append(node('span', 'pill', q.disc), node('span', 'pill topic', q.assunto || 'Geral'), node('span', 'question-id', q.id));
   const fav = node('button', `favorite-button${favorite(q.id) ? ' is-favorite' : ''}`);
   fav.type = 'button'; fav.dataset.action = 'toggle-favorite'; fav.setAttribute('aria-label', favorite(q.id) ? 'Remover questão das favoritas' : 'Adicionar questão às favoritas'); fav.textContent = favorite(q.id) ? '★' : '☆';
@@ -247,6 +311,7 @@ function makeQuestionCard(q, options = {}) {
     }
     body.appendChild(actions);
   }
+  if (state.view !== 'simulado') body.appendChild(createQuestionManagement(q));
   card.appendChild(body);
   return card;
 }
@@ -254,7 +319,7 @@ function renderPractice() {
   const filtered = getFilteredQuestions();
   if (!filtered.length) {
     const emptyTitle=state.onlyWrong?'Sem erros para revisar':state.reviewIds?'Sem erros nesta rodada':'Nenhuma questão encontrada';
-    const emptyCopy=state.onlyWrong||state.reviewIds?'Não há questões pendentes nesta revisão.':'Tente ajustar a busca ou escolher outra disciplina.';
+    const emptyCopy=state.onlyWrong||state.reviewIds?'Não há questões pendentes nesta revisão.':'Tente ajustar a busca, escolher outra coleção ou disciplina.';
     viewRoot.append(heading('MODO DE ESTUDO', emptyTitle, emptyCopy));
     if (state.onlyWrong) { const b = node('button', 'button', 'Voltar para todas as questões'); b.type = 'button'; b.dataset.action = 'clear-wrong-filter'; viewRoot.appendChild(b); }
     return;
@@ -329,22 +394,42 @@ function renderSimulation() {
   const selectedIndex=answer?answer.selectedIndex:(sim.pending[q.id]??null);
   viewRoot.appendChild(makeQuestionCard(q,{order:sim.orders[q.id]||optionOrder(q),selectedIndex,locked:!!answer,position:sim.index,total:sim.ids.length,optionAction:answer?null:'select-simulation',submitAction:answer?null:'submit-simulation'}));
 }
+function createQuestionManagement(q) {
+  const actions = node('div', 'question-management');
+  const key = node('button', 'text-link', 'Alterar gabarito desta questão');
+  key.type = 'button'; key.dataset.action = 'open-key-correction'; key.dataset.id = q.id;
+  if (!hasCorrectKey(q)) key.title = 'Cadastrar manualmente o gabarito, com fonte e justificativa.';
+  const edit = node('button', 'text-link', 'Editar questão'); edit.type = 'button'; edit.dataset.action = 'edit-question'; edit.dataset.id = q.id;
+  const archived = isQuestionArchived(q);
+  const status = node('button', `text-link${archived ? '' : ' danger-link'}`, archived ? 'Restaurar questão' : 'Excluir questão');
+  status.type = 'button'; status.dataset.action = 'question-status'; status.dataset.id = q.id; status.dataset.statusAction = archived ? 'restore' : 'archive';
+  actions.append(key, edit, status);
+  return actions;
+}
 function renderBank() {
-  const filtered=getFilteredQuestions();
-  viewRoot.append(heading('CONSULTA', 'Banco de questões', 'Abra uma questão e escolha entre responder ou consultar o gabarito.'));
-  if (!filtered.length) { viewRoot.appendChild(node('div','empty-state','Nenhuma questão corresponde aos filtros.')); return; }
+  const filtered=getFilteredQuestions({ mode: 'bank' });
+  viewRoot.append(heading('CONSULTA', 'Banco de questões', 'Abra uma questão sem registrar resposta. Itens sem gabarito e arquivados ficam identificados.'));
+  if (!filtered.length) { viewRoot.appendChild(node('div','empty-state',state.bankStatus==='archived'?'Nenhuma questão arquivada corresponde aos filtros.':'Nenhuma questão corresponde aos filtros.')); return; }
   const perPage=20; const pages=Math.max(1,Math.ceil(filtered.length/perPage)); state.bankPage=Math.min(state.bankPage,pages);
   const start=(state.bankPage-1)*perPage;
   const list=node('div','bank-list');
   filtered.slice(start,start+perPage).forEach(q=>{
     const details=node('details','bank-entry'); details.dataset.questionId=q.id; const summary=node('summary','bank-summary');
-    const main=node('div','bank-summary-main'); const meta=node('div','bank-meta'); meta.append(node('span','pill',q.disc),node('span','pill topic',q.assunto||'Geral'),node('span','question-id',q.id));
+    const archived=isQuestionArchived(q);const hasKey=hasCorrectKey(q);
+    const main=node('div','bank-summary-main'); const meta=node('div','bank-meta'); if(collectionOf(q)!=='Apostilas CFS 31')meta.append(node('span','pill collection',collectionOf(q))); meta.append(node('span','pill',q.disc),node('span','pill topic',q.assunto||'Geral'));
+    if(archived)meta.append(node('span','pill archived-pill','Arquivada'));else if(!hasKey)meta.append(node('span','pill pending-pill','Aguardando gabarito'));
+    meta.append(node('span','question-id',q.id));
     main.append(meta,node('p','bank-question',q.enunciado)); summary.appendChild(main);
     const favoriteBtn=node('button',`favorite-button bank-fav${favorite(q.id)?' is-favorite':''}`); favoriteBtn.type='button'; favoriteBtn.dataset.action='toggle-favorite'; favoriteBtn.dataset.id=q.id; favoriteBtn.setAttribute('aria-label',favorite(q.id)?'Remover questão das favoritas':'Adicionar questão às favoritas'); favoriteBtn.textContent=favorite(q.id)?'★':'☆'; summary.appendChild(favoriteBtn);
     details.appendChild(summary);
     const detail=node('div','bank-detail');
     const response=state.bankResponses[q.id];
-    if(response?.submitted){
+    if(archived){
+      detail.appendChild(node('p','bank-prompt','Esta questão foi arquivada para todos. Ela não participa da prática nem dos simulados; use “Restaurar questão” para reativá-la.'));
+    }else if(!hasKey){
+      detail.appendChild(node('p','bank-prompt','Aguardando gabarito. A questão pode ser lida e editada, mas não participa da prática nem dos simulados até que a turma cadastre uma alternativa fundamentada.'));
+      detail.appendChild(createOptions(q,optionOrder(q),null,true,false,'view-key'));
+    }else if(response?.submitted){
       detail.appendChild(createOptions(q,optionOrder(q),response.selectedIndex,true,true,'view-key'));
       detail.appendChild(feedback(q,response.selectedIndex));
       const again=node('button','button','Responder novamente');again.type='button';again.dataset.action='retry-bank-answer';again.dataset.id=q.id;detail.appendChild(again);
@@ -360,10 +445,55 @@ function renderBank() {
       const actions=node('div','bank-answer-actions');const answer=node('button','button primary','Responder questão');answer.type='button';answer.dataset.action='start-bank-answer';answer.dataset.id=q.id;
       const key=node('button','button','Consultar gabarito e resolução');key.type='button';key.dataset.action='reveal-bank-key';key.dataset.id=q.id;actions.append(answer,key);detail.appendChild(actions);
     }
+    detail.appendChild(createQuestionManagement(q));
     details.appendChild(detail); list.appendChild(details);
   });
   viewRoot.appendChild(list);
   if(pages>1){const nav=node('div','pagination');const prev=node('button','button','Anterior');prev.type='button';prev.dataset.action='bank-page';prev.dataset.page=state.bankPage-1;prev.disabled=state.bankPage<=1;const next=node('button','button','Próxima');next.type='button';next.dataset.action='bank-page';next.dataset.page=state.bankPage+1;next.disabled=state.bankPage>=pages;nav.append(prev,node('span','','Página '+state.bankPage+' de '+pages),next);viewRoot.appendChild(nav);}
+}
+function renderReader() {
+  const filtered = getFilteredQuestions({ mode: 'reader' });
+  viewRoot.append(heading('MODO LEITURA', 'Leitor de questões', 'Leia uma questão por página, ajuste o texto e continue de onde parou neste aparelho.'));
+  if (!filtered.length) { viewRoot.appendChild(node('div', 'empty-state', 'Nenhuma questão disponível para leitura com estes filtros.')); return; }
+  let index = filtered.findIndex(q => q.id === state.readerQuestionId);
+  if (index < 0) index = 0;
+  const q = filtered[index];
+  state.readerQuestionId = q.id; saveReaderSettings();
+
+  const toolbar = node('div', 'reader-toolbar');
+  const position = node('span', 'reader-position', `Página ${index + 1} de ${filtered.length}`);
+  const fontControls = node('div', 'reader-font-controls');
+  const smaller = node('button', 'button reader-font-button', 'A−'); smaller.type = 'button'; smaller.dataset.action = 'reader-font-smaller'; smaller.setAttribute('aria-label', 'Diminuir tamanho do texto'); smaller.disabled = state.readerFontScale <= .85;
+  const larger = node('button', 'button reader-font-button', 'A+'); larger.type = 'button'; larger.dataset.action = 'reader-font-larger'; larger.setAttribute('aria-label', 'Aumentar tamanho do texto'); larger.disabled = state.readerFontScale >= 1.5;
+  fontControls.append(smaller, larger); toolbar.append(position, fontControls); viewRoot.appendChild(toolbar);
+  viewRoot.appendChild(createProgressTrack(index + 1, filtered.length));
+
+  const page = node('article', 'reader-page');
+  page.style.setProperty('--reader-scale', String(state.readerFontScale));
+  page.setAttribute('aria-label', `Página ${index + 1}: ${q.disc}, ${q.assunto || 'questão'}`);
+  const pageHeader = node('div', 'reader-page-header');
+  pageHeader.append(node('span', 'reader-chapter', `${q.disc} · ${q.assunto || 'Geral'}`), node('span', 'question-id', q.id));
+  page.appendChild(pageHeader);
+  const prompt = node('div', 'reader-prompt'); appendMarkedText(prompt, q.enunciado); page.appendChild(prompt);
+  const alternatives = node('ol', 'reader-alternatives');
+  q.alts.forEach((alternative, optionIndex) => {
+    const item = node('li', 'reader-alternative');
+    item.append(node('span', 'reader-alternative-letter', `${LETTERS[optionIndex] || optionIndex + 1}.`));
+    const text = node('span'); appendMarkedText(text, alternative.t); item.appendChild(text); alternatives.appendChild(item);
+  });
+  page.appendChild(alternatives);
+  const reference = getText(q.base);
+  if (reference) page.appendChild(node('p', 'reader-reference', `Referência: ${reference}`));
+  page.appendChild(node('p', 'reader-saved-note', 'Posição de leitura salva neste aparelho.'));
+  if (!hasCorrectKey(q)) page.appendChild(node('p', 'pending-note', 'Aguardando gabarito: esta questão ainda não pode ser pontuada.'));
+  viewRoot.appendChild(page);
+
+  const actions = node('div', 'reader-actions');
+  const previous = node('button', 'button', '← Página anterior'); previous.type = 'button'; previous.dataset.action = 'reader-previous'; previous.disabled = index <= 0;
+  const respond = node('button', 'button primary', 'Responder esta questão'); respond.type = 'button'; respond.dataset.action = 'reader-answer'; respond.dataset.id = q.id; respond.disabled = !hasCorrectKey(q) || isQuestionArchived(q);
+  const next = node('button', 'button', 'Próxima página →'); next.type = 'button'; next.dataset.action = 'reader-next'; next.disabled = index >= filtered.length - 1;
+  actions.append(previous, respond, next); viewRoot.appendChild(actions);
+  viewRoot.appendChild(createQuestionManagement(q));
 }
 function renderProgress() {
   const attempts=getAttemptHistory(); const total=attempts.length; const correct=attempts.filter(a=>a.correct).length; const wrong=attempts.filter(a=>!a.correct).length;
@@ -383,6 +513,7 @@ function render() {
   if(state.view==='practice')renderPractice();
   else if(state.view==='simulado')renderSimulation();
   else if(state.view==='bank')renderBank();
+  else if(state.view==='reader')renderReader();
   else renderProgress();
 }
 function toggleFavorite(id) {
@@ -394,10 +525,10 @@ function toggleFavorite(id) {
   target?.focus();
 }
 function recordAnswer(q,index) {
-  if(!q.alts[index])return;
+  if(!q.alts[index]||effectiveCorrectIndex(q)<0)return;
   const previous=state.saved.answers[q.id];
   const history=Array.isArray(previous?.history)?[...previous.history]:(previous?[{selectedIndex:previous.selectedIndex,correct:previous.correct,at:previous.at||Date.now()}]:[]);
-  const at=Date.now();const correct=q.alts[index].ok===true;
+  const at=Date.now();const correct=index===effectiveCorrectIndex(q);
   history.push({selectedIndex:index,correct,at});
   state.saved.answers[q.id]={selectedIndex:index,correct,at,history};save();
 }
@@ -420,7 +551,7 @@ function selectSimulation(index) {
 function submitSimulation(id) {
   const sim=state.simulation;const q=questions.find(item=>item.id===id);const index=sim?.pending[id];
   if(!sim||sim.done||!q||index===undefined||sim.answers[id])return;
-  sim.answers[id]={selectedIndex:index,correct:q.alts[index]?.ok===true};delete sim.pending[id];recordAnswer(q,index);render();
+  sim.answers[id]={selectedIndex:index,correct:index===effectiveCorrectIndex(q)};delete sim.pending[id];recordAnswer(q,index);render();
   const next=$('[data-action="next-question"]',viewRoot);(next&&!next.disabled?next:$('[data-action="finish-simulation"]',viewRoot))?.focus();
 }
 function resetSimulation(){state.simulation=null;render();}
@@ -436,6 +567,9 @@ function renderBankPreservingOpen(id, focusAction = null, optionIndex = null) {
 function handleAction(button) {
   const action=button.dataset.action;
   if(action==='toggle-favorite'){const card=button.closest('[data-question-id]');const id=button.dataset.id||card?.dataset.questionId;if(id)toggleFavorite(id);else{const q=state.view==='simulado'&&state.simulation?questions.find(x=>x.id===state.simulation.ids[state.simulation.index]):getFilteredQuestions()[state.practiceIndex];if(q)toggleFavorite(q.id);}return;}
+  if(action==='open-key-correction'){const q=questions.find(item=>item.id===button.dataset.id);if(q)window.CFS31AnswerKeys?.open(q);return;}
+  if(action==='edit-question'){const q=questions.find(item=>item.id===button.dataset.id);if(q)window.CFS31QuestionCollab?.openEdit(q);return;}
+  if(action==='question-status'){const q=questions.find(item=>item.id===button.dataset.id);if(q)window.CFS31QuestionCollab?.openStatus(q,button.dataset.statusAction);return;}
   if(action==='retry-question'){state.retryUnlocked.add(button.dataset.id);render();$('.option-button',viewRoot)?.focus();return;}
   if(action==='select-practice'){selectPractice(Number(button.dataset.optionIndex));return;}
   if(action==='submit-practice'){submitPractice(button.dataset.id);return;}
@@ -454,30 +588,87 @@ function handleAction(button) {
   if(action==='finish-simulation'){if(state.simulation){state.simulation.done=true;render();($('[data-action="review-simulation-errors"]',viewRoot)||$('[data-action="reset-simulation"]',viewRoot))?.focus();}return;}
   if(action==='reset-simulation'){resetSimulation();return;}
   if(action==='bank-page'){state.bankPage=Number(button.dataset.page);const page=state.bankPage;render();$$('[data-action="bank-page"]',viewRoot).find(b=>Number(b.dataset.page)===page)?.focus();return;}
+  if(action==='reader-previous'||action==='reader-next'){
+    const filtered=getFilteredQuestions({mode:'reader'});const index=filtered.findIndex(q=>q.id===state.readerQuestionId);const nextIndex=Math.max(0,Math.min(filtered.length-1,index+(action==='reader-next'?1:-1)));
+    if(filtered[nextIndex])state.readerQuestionId=filtered[nextIndex].id;saveReaderSettings();render();$(`[data-action="${action}"]`,viewRoot)?.focus();return;
+  }
+  if(action==='reader-font-smaller'||action==='reader-font-larger'){
+    state.readerFontScale=Math.max(.85,Math.min(1.5,Math.round((state.readerFontScale+(action==='reader-font-larger' ? .1 : -.1))*100)/100));saveReaderSettings();render();$(`[data-action="${action}"]`,viewRoot)?.focus();return;
+  }
+  if(action==='reader-answer'){
+    const id=button.dataset.id;state.view='practice';state.onlyWrong=false;state.reviewIds=null;
+    const filtered=getFilteredQuestions({mode:'practice'});const index=filtered.findIndex(q=>q.id===id);
+    if(index>=0){state.practiceIndex=index;render();$('.option-button',viewRoot)?.focus();}return;
+  }
   if(action==='review-wrongs'){state.onlyWrong=true;state.reviewIds=null;state.view='practice';state.practiceIndex=0;render();$('.option-button',viewRoot)?.focus();return;}
   if(action==='clear-wrong-filter'){state.onlyWrong=false;state.reviewIds=null;state.practiceIndex=0;render();return;}
-  if(action==='review-simulation-errors'){const sim=state.simulation;state.reviewIds=sim.ids.filter(id=>sim.answers[id]&&!sim.answers[id].correct);state.onlyWrong=false;state.discipline='all';state.topic='all';state.search='';$('#question-search').value='';$('#discipline-filter').value='all';state.view='practice';state.practiceIndex=0;render();return;}
-  if(action==='open-question'){const id=button.dataset.id;state.onlyWrong=false;state.reviewIds=null;state.discipline='all';state.topic='all';state.search='';$('#question-search').value='';$('#discipline-filter').value='all';$('#topic-filter').value='all';state.view='practice';state.practiceIndex=Math.max(0,getFilteredQuestions().findIndex(q=>q.id===id));render();return;}
+  if(action==='review-simulation-errors'){const sim=state.simulation;state.reviewIds=sim.ids.filter(id=>sim.answers[id]&&!sim.answers[id].correct);state.onlyWrong=false;state.collection='all';state.discipline='all';state.topic='all';state.search='';$('#question-search').value='';$('#collection-filter').value='all';$('#discipline-filter').value='all';state.view='practice';state.practiceIndex=0;render();return;}
+  if(action==='open-question'){const id=button.dataset.id;state.onlyWrong=false;state.reviewIds=null;state.collection='all';state.discipline='all';state.topic='all';state.search='';$('#question-search').value='';$('#collection-filter').value='all';$('#discipline-filter').value='all';$('#topic-filter').value='all';state.view='practice';state.practiceIndex=Math.max(0,getFilteredQuestions().findIndex(q=>q.id===id));render();return;}
   if(action==='reset-progress'){if(confirm('Apagar todas as respostas e favoritas salvas neste navegador?')){state.saved={answers:{},favorites:[]};save();render();}return;}
 }
 document.addEventListener('click',event=>{
   const tab=event.target.closest('[data-view]');if(tab){state.view=tab.dataset.view;state.onlyWrong=false;state.reviewIds=null;state.bankPage=1;render();return;}
   const action=event.target.closest('[data-action]');if(action){if(action.dataset.action==='toggle-favorite'&&action.closest('summary'))event.preventDefault();handleAction(action);}
 });
-$('#clear-filters').addEventListener('click',()=>{state.discipline='all';state.topic='all';state.search='';state.onlyWrong=false;state.reviewIds=null;state.practiceIndex=0;state.bankPage=1;$('#question-search').value='';$('#filter-control').open=false;render();});
+window.addEventListener('cfs31:answerkeys-updated',()=>{if(state.view==='bank')renderBankPreservingOpen();else render();});
+window.addEventListener('cfs31:questions-updated',()=>{state.bankPage=1;if(state.view==='bank')renderBankPreservingOpen();else render();});
+$('#clear-filters').addEventListener('click',()=>{state.collection='all';state.discipline='all';state.topic='all';state.bankStatus='active';state.search='';state.onlyWrong=false;state.reviewIds=null;state.practiceIndex=0;state.bankPage=1;$('#question-search').value='';$('#filter-control').open=false;render();});
+$('#collection-filter').addEventListener('change',event=>{state.collection=event.target.value;state.discipline='all';state.topic='all';state.practiceIndex=0;state.bankPage=1;state.onlyWrong=false;state.reviewIds=null;render();});
 $('#discipline-filter').addEventListener('change',event=>{state.discipline=event.target.value;state.topic='all';state.practiceIndex=0;state.bankPage=1;state.onlyWrong=false;state.reviewIds=null;render();});
 $('#topic-filter').addEventListener('change',event=>{state.topic=event.target.value;state.practiceIndex=0;state.bankPage=1;render();});
+$('#bank-status-filter').addEventListener('change',event=>{state.bankStatus=event.target.value;state.bankPage=1;render();});
 $('#question-search').addEventListener('input',event=>{state.search=event.target.value;state.practiceIndex=0;state.bankPage=1;render();});
 document.addEventListener('keydown',event=>{if(event.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){event.preventDefault();$('#question-search').focus();}if(event.key==='Escape'&&document.activeElement===$('#question-search')){$('#question-search').value='';state.search='';render();}});
+function setupPwa() {
+  const installButton = $('#install-app');
+  const helpDialog = $('#install-help-dialog');
+  let deferredPrompt = null;
+  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) installButton.hidden = true;
+  window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); deferredPrompt = event; installButton.hidden = false; });
+  installButton.addEventListener('click', async () => {
+    if (!deferredPrompt) { helpDialog.showModal(); return; }
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice.catch(() => null);
+    deferredPrompt = null;
+  });
+  $('#close-install-help').addEventListener('click', () => helpDialog.close());
+  window.addEventListener('appinstalled', () => { installButton.hidden = true; deferredPrompt = null; });
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => setStatus('A leitura segue disponível online; não foi possível ativar o modo offline neste navegador.'));
+}
+async function loadOptionalQuestionFile(file, errors) {
+  try {
+    const response = await fetch(file);
+    if (response.status === 404) return [];
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    if (!Array.isArray(data)) throw new Error('o arquivo não contém uma lista JSON');
+    return data;
+  } catch (error) { errors.push(`${file}: ${error.message}`); return []; }
+}
 async function init(){
   state.saved=readSaved();
+  const readerSettings=readReaderSettings();state.readerQuestionId=readerSettings.questionId;state.readerFontScale=readerSettings.fontScale;
+  setupPwa();
   try{
     const response=await fetch('data/questions.json');if(!response.ok)throw new Error(`HTTP ${response.status}`);
-    questions=await response.json();
-    if(!Array.isArray(questions)||!questions.length)throw new Error('O arquivo de questões está vazio.');
+    const baseQuestions=await response.json();
+    if(!Array.isArray(baseQuestions)||!baseQuestions.length)throw new Error('O arquivo de questões está vazio.');
+    const supplementErrors=[];
+    const cfs30Questions=await loadOptionalQuestionFile('data/questions_cfs30.json',supplementErrors);
+    const pendingQuestions=await loadOptionalQuestionFile('data/questions_cfs30_pending.json',supplementErrors);
+    questions=[...baseQuestions,...cfs30Questions,...pendingQuestions];
+    const ids=new Set();
+    questions.forEach(q=>{
+      if(!q||typeof q.id!=='string'||ids.has(q.id))throw new Error(`ID ausente ou duplicado: ${q?.id||'(vazio)'}`);
+      ids.add(q.id);
+      if(!Array.isArray(q.alts)||q.alts.length!==4)throw new Error(`${q.id}: esperadas exatamente quatro alternativas.`);
+      const marked=q.alts.filter(option=>option?.ok===true).length;
+      if(marked!==1&&!(marked===0&&q.keyStatus==='pending'))throw new Error(`${q.id}: precisa ter exatamente um gabarito ou estar explicitamente pendente.`);
+    });
+    window.CFS31QuestionCollab?.setQuestions(questions);
     const counts=new Map();questions.forEach(q=>counts.set(q.disc,(counts.get(q.disc)||0)+1));
     disciplines=[...counts].map(([name,count])=>({name,count})).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
-    render();setStatus('');
+    render();setStatus(supplementErrors.length?`Alguns suplementos não foram carregados: ${supplementErrors.join(' · ')}`:'');
   }catch(error){setStatus(`Não foi possível carregar o banco: ${error.message}. Abra esta página por um servidor HTTP, não como arquivo local.`);viewRoot.replaceChildren();}
 }
 init();

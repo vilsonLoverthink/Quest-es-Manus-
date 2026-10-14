@@ -4,33 +4,42 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#102d27">
-  <meta name="description" content="Banco interativo de questões do CFS 31: pratique, faça simulados e acompanhe seu progresso.">
-  <title>Banco de Questões — CFS 31</title>
+  <meta name="application-name" content="Questões Manus — CFS 31">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="Banco interativo de questões do CFS 31 e coleção de provas anteriores do CFS 30.">
+  <title>Banco de Questões — CFS 31 + CFS 30</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="assets/cfs31-icon.svg">
   <link rel="icon" type="image/jpeg" href="assets/brazil-flag.jpg">
   <link rel="stylesheet" href="styles.css">
+  <script defer src="answer-key-client.js"></script>
+  <script defer src="question-collaboration.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="#inicio" aria-label="Banco de Questões CFS 31, início">
       <span class="brand-mark"><span>31</span></span>
-      <span class="brand-name"><strong>BIZUS DE PROVA</strong><small>CFS 31 · BANCO DE QUESTÕES</small></span>
+      <span class="brand-name"><strong>BIZUS DE PROVA</strong><small>CFS 31 + CFS 30 · BANCO DE QUESTÕES</small></span>
       <img class="flag" src="assets/brazil-flag.jpg" alt="" width="33" height="23">
     </a>
     <nav class="main-nav" aria-label="Navegação principal">
       <button class="nav-tab is-active" type="button" aria-current="page" data-view="practice">Praticar</button>
       <button class="nav-tab" type="button" data-view="simulado">Simulado</button>
       <button class="nav-tab" type="button" data-view="bank">Banco</button>
+      <button class="nav-tab" type="button" data-view="reader">Leitura</button>
       <button class="nav-tab" type="button" data-view="progress">Meu progresso</button>
     </nav>
+    <button class="install-app-button" id="install-app" type="button">Instalar no Android</button>
   </header>
 
   <main id="inicio" class="page-shell">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-line"></span> CADERNO DE TREINO · CFS 31</p>
+        <p class="eyebrow"><span class="eyebrow-line"></span> CADERNO DE TREINO · CFS 31 + CFS 30</p>
         <h1 id="hero-title">Estude. <em>Responda.</em><br>Avance com confiança.</h1>
-        <p>Uma versão interativa das questões enviadas: prática imediata, simulados e acompanhamento privado do seu progresso.</p>
+        <p>Questões das apostilas do CFS 31 e provas anteriores do CFS 30, com prática, simulados e acompanhamento privado do seu progresso.</p>
       </div>
       <div class="hero-score" aria-label="Quantidade de questões e disciplinas">
         <div class="hero-score-ring"><span id="hero-total">—</span><small>questões</small></div>
@@ -61,23 +70,122 @@
             </summary>
             <div class="filter-popover" id="filter-popover">
               <p class="filter-popover-title">Refinar questões</p>
+              <label class="field-label" for="collection-filter">Coleção</label>
+              <select id="collection-filter" class="select-control"><option value="all">Todas as coleções</option></select>
               <label class="field-label" for="discipline-filter">Disciplina</label>
               <select id="discipline-filter" class="select-control"><option value="all">Todas as disciplinas</option></select>
               <label class="field-label topic-filter-label" for="topic-filter">Assunto</label>
               <select id="topic-filter" class="select-control"><option value="all">Todos os assuntos</option></select>
+              <label class="field-label topic-filter-label" for="bank-status-filter">Situação no Banco</label>
+              <select id="bank-status-filter" class="select-control">
+                <option value="active">Ativas e pendentes</option>
+                <option value="pending">Aguardando gabarito</option>
+                <option value="archived">Arquivadas</option>
+                <option value="all">Todas</option>
+              </select>
               <button class="filter-clear" id="clear-filters" type="button">Limpar filtros</button>
             </div>
           </details>
           <div class="result-count" id="result-count">Carregando o banco…</div>
         </div>
         <div id="load-status" class="load-status" role="status" aria-live="polite">Preparando as questões…</div>
+        <p id="global-key-status" class="sync-status" role="status" aria-live="polite">Sincronizando gabaritos globais…</p>
+        <p id="question-sync-status" class="sync-status" role="status" aria-live="polite">Sincronizando edições globais…</p>
         <div id="app-view" class="app-view" aria-live="polite"></div>
       </section>
     </div>
   </main>
 
+  <dialog id="key-correction-dialog" class="app-dialog" aria-labelledby="key-correction-title">
+    <form id="key-correction-form">
+      <p class="eyebrow-dark">CORREÇÃO COMPARTILHADA</p>
+      <h2 id="key-correction-title">Alterar gabarito desta questão</h2>
+      <p id="key-correction-question" class="dialog-question"></p>
+      <p id="key-correction-current" class="dialog-current-key"></p>
+      <fieldset class="correction-fieldset">
+        <legend>Qual alternativa deve ser considerada correta?</legend>
+        <div id="correction-options" class="correction-option-list"></div>
+      </fieldset>
+      <label class="field-label" for="correction-source">Fonte (apostila e página, norma ou URL)</label>
+      <input id="correction-source" class="dialog-input" type="text" maxlength="1200" autocomplete="off" required>
+      <label class="field-label" for="correction-rationale">Justificativa</label>
+      <textarea id="correction-rationale" class="dialog-input" rows="4" maxlength="2000" required></textarea>
+      <p class="correction-warning">Ao confirmar, esta alteração será aplicada a todos os participantes e poderá mudar a correção de respostas futuras. A fonte, a justificativa e o histórico ficarão visíveis para a turma.</p>
+      <p id="correction-status" class="dialog-status" role="status" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button class="button" id="cancel-key-correction" type="button">Cancelar</button>
+        <button class="button primary" id="submit-key-correction" type="submit">Publicar correção para todos</button>
+      </div>
+    </form>
+    <details class="key-history-details">
+      <summary>Histórico de alterações desta questão</summary>
+      <div id="key-history-list" class="key-history-list"></div>
+    </details>
+  </dialog>
+
+  <dialog id="question-edit-dialog" class="app-dialog question-edit-dialog" aria-labelledby="question-edit-title">
+    <form id="question-edit-form">
+      <p class="eyebrow-dark">EDIÇÃO COMPARTILHADA</p>
+      <h2 id="question-edit-title">Editar questão</h2>
+      <p id="edit-question-id" class="dialog-current-key"></p>
+      <label class="field-label" for="edit-question-prompt">Enunciado</label>
+      <textarea id="edit-question-prompt" class="dialog-input" rows="5" maxlength="5000" required></textarea>
+      <fieldset class="correction-fieldset">
+        <legend>Quatro alternativas (a ordem e o gabarito permanecem separados)</legend>
+        <label class="field-label" for="edit-question-option-0">Alternativa A</label><textarea id="edit-question-option-0" class="dialog-input" rows="2" maxlength="1500" required></textarea>
+        <label class="field-label" for="edit-question-option-1">Alternativa B</label><textarea id="edit-question-option-1" class="dialog-input" rows="2" maxlength="1500" required></textarea>
+        <label class="field-label" for="edit-question-option-2">Alternativa C</label><textarea id="edit-question-option-2" class="dialog-input" rows="2" maxlength="1500" required></textarea>
+        <label class="field-label" for="edit-question-option-3">Alternativa D</label><textarea id="edit-question-option-3" class="dialog-input" rows="2" maxlength="1500" required></textarea>
+      </fieldset>
+      <label class="field-label" for="edit-question-resolution">Resolução (opcional)</label>
+      <textarea id="edit-question-resolution" class="dialog-input" rows="3" maxlength="5000"></textarea>
+      <label class="field-label" for="edit-question-reference">Referência bibliográfica (opcional)</label>
+      <input id="edit-question-reference" class="dialog-input" type="text" maxlength="1200">
+      <label class="field-label" for="edit-question-source-url">URL da referência (opcional)</label>
+      <input id="edit-question-source-url" class="dialog-input" type="url" maxlength="2048" placeholder="https://…">
+      <label class="field-label" for="edit-question-source">Fonte que fundamenta a edição</label>
+      <input id="edit-question-source" class="dialog-input" type="text" maxlength="1200" required>
+      <label class="field-label" for="edit-question-rationale">Justificativa da edição</label>
+      <textarea id="edit-question-rationale" class="dialog-input" rows="3" maxlength="2000" required></textarea>
+      <p class="correction-warning">A publicação modifica o conteúdo para todos os participantes. A versão anterior, a fonte e a justificativa ficam no histórico; o gabarito vigente é mantido pelo seu controle próprio.</p>
+      <p id="edit-question-status" class="dialog-status" role="status" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button class="button" id="cancel-question-edit" type="button">Cancelar</button>
+        <button class="button primary" id="save-question-edit" type="submit">Aplicar edição para todos</button>
+      </div>
+    </form>
+    <details class="key-history-details"><summary>Histórico de edições e arquivamentos</summary><div id="question-edit-history" class="key-history-list"></div></details>
+  </dialog>
+
+  <dialog id="question-status-dialog" class="app-dialog" aria-labelledby="question-status-title">
+    <form id="question-status-form">
+      <p class="eyebrow-dark">ALTERAÇÃO PARA TODA A TURMA</p>
+      <h2 id="question-status-title">Arquivar questão</h2>
+      <p id="question-status-prompt" class="dialog-question"></p>
+      <p id="question-status-warning" class="correction-warning"></p>
+      <label class="field-label" for="question-status-source">Fonte</label>
+      <input id="question-status-source" class="dialog-input" type="text" maxlength="1200" required>
+      <label class="field-label" for="question-status-rationale">Justificativa</label>
+      <textarea id="question-status-rationale" class="dialog-input" rows="3" maxlength="2000" required></textarea>
+      <p id="question-status-message" class="dialog-status" role="status" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button class="button" id="cancel-question-status" type="button">Cancelar</button>
+        <button class="button primary" id="submit-question-status" type="submit">Confirmar alteração global</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="install-help-dialog" class="app-dialog install-help-dialog" aria-labelledby="install-help-title">
+    <div>
+      <p class="eyebrow-dark">ACESSO NO CELULAR</p>
+      <h2 id="install-help-title">Instalar no Android</h2>
+      <p>No Chrome, abra o menu <strong>⋮</strong> e escolha <strong>Instalar app</strong> ou <strong>Adicionar à tela inicial</strong>. Depois, abra o ícone do CFS 31 para estudar em tela cheia; as questões carregadas continuam disponíveis sem conexão.</p>
+      <div class="dialog-actions"><button class="button primary" id="close-install-help" type="button">Entendi</button></div>
+    </div>
+  </dialog>
+
   <footer class="site-footer">
-    <p><strong>Material de estudo.</strong> Questões, gabaritos e resoluções foram preservados do arquivo recebido. Confira a apostila e a legislação vigente; este protótipo não valida atualizações normativas.</p>
+    <p><strong>Material de estudo.</strong> Confira a referência indicada em cada questão e a legislação vigente; este aplicativo não substitui as apostilas nem valida automaticamente atualizações normativas.</p>
     <span>Dados e progresso permanecem neste dispositivo.</span>
   </footer>
 </body>

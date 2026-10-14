@@ -1,0 +1,741 @@
+[
+  {
+    "id": "cfs30-file1-q001",
+    "disc": "Armamento e Munição",
+    "assunto": "Classificação e nomenclatura de armas de fogo: pistola",
+    "enunciado": "Assinale a alternativa correta, Podemos dizer que a pistola é uma:",
+    "alts": [
+      {
+        "t": "Arma de fogo curta, de porte e alma raiada ou lisa.",
+        "ok": false,
+        "erro": "ou lisa",
+        "motivo": "A apostila classifica a pistola como arma de porte e lista pistolas entre as armas de alma raiada; a alternativa admite alma lisa."
+      },
+      {
+        "t": "Arma de fogo curta, de assalto e alma raiada:",
+        "ok": false,
+        "erro": "de assalto",
+        "motivo": "A classificação local da pistola é arma de fogo de porte, não de assalto."
+      },
+      {
+        "t": "Arma de fogo curta, portátil e alma raiada.",
+        "ok": false,
+        "erro": "portátil",
+        "motivo": "Para a pistola, a apostila usa a categoria específica de porte; portátil é a classificação empregada no material para armas como carabina e fuzil."
+      },
+      {
+        "t": "Arma de fogo curta, de porte e alma raiada.",
+        "ok": true,
+        "erro": "",
+        "motivo": "É a alternativa que reúne a classificação de porte e a alma raiada indicada para pistolas no material local."
+      }
+    ],
+    "resolucao": "A apostila define a pistola como arma de fogo de porte e, na classificação quanto à alma do cano, relaciona pistolas às armas de alma raiada. Assim, a única alternativa correta é a D. A marcação candidata D coincide com essa resposta.",
+    "base": "Fonte local: APOSTILA DE ARMAMENTO E MUNIÇÃO I, 1º SGT QPPM Wellington, seção ‘Conceito e classificação das armas de fogo’/‘Nomenclatura das armas de fogo’ (p. 10 no sumário; corpus all_materials_corpus.txt, linhas 71–73 e 88–96). A prova está em Provao_CFS30_link1.docx/Provao_CFS30_link1.txt, questão 1, imagem/páginas 1–2.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.98,
+      "source_title": "Apostila de Armamento e Munição I — 1º Sgt QPPM Wellington",
+      "source_location": "Corpus local all_materials_corpus.txt, linhas 71–73 (alma raiada, com pistolas como exemplo) e 88–96 (nomenclatura; pistola como arma de porte); prova OCR linhas 33–50 e DOCX páginas 1–2.",
+      "source_url": "",
+      "candidate_mark": "D",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "Corrigidos apenas erros evidentes: ‘Questão ot’ para ‘Questão 01’ na identificação; rótulo ‘(CD’ para ‘(D)’; ‘raiadia’ para ‘raiada’ em C; ‘ralada’ para ‘raiada’ em D. A pontuação original foi preservada.",
+      "note": "Manifesto candidate_items.json identifica file1-q001, prova 1, ano 2022 e marca candidata D, com status de marcação visível não oficial. O gabarito do arquivo 2 não foi usado. A fonte local sustenta o texto e uma única resposta correta; não foi necessária pesquisa web."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 1"
+  },
+  {
+    "id": "cfs30-file1-q002",
+    "disc": "Armamento e Munição",
+    "assunto": "Sistemas de acionamento de armas de fogo",
+    "enunciado": "Assinale a alternativa correta. Revólveres e pistolas podem possuir vários sistemas de acionamento, dentre eles estão:",
+    "alts": [
+      {
+        "t": "Ação Simples, Ação dupla e Repetição.",
+        "ok": false,
+        "erro": "Repetição",
+        "motivo": "Repetição é sistema de funcionamento, não sistema de acionamento."
+      },
+      {
+        "t": "Dupla ação, Ação Simples e Ação Dupla.",
+        "ok": true,
+        "erro": "",
+        "motivo": "Reúne os três sistemas de acionamento definidos na fonte: dupla ação, ação simples e ação dupla."
+      },
+      {
+        "t": "Dupla-Simples, Semiautomático e Automático.",
+        "ok": false,
+        "erro": "Semiautomático",
+        "motivo": "Semiautomático é sistema de funcionamento, não sistema de acionamento."
+      },
+      {
+        "t": "Repetição, semiautomático e automático.",
+        "ok": false,
+        "erro": "Repetição",
+        "motivo": "A alternativa lista sistemas de funcionamento, não os sistemas de acionamento pedidos."
+      }
+    ],
+    "resolucao": "A Cartilha da Polícia Federal separa sistema de acionamento — ação simples, ação dupla e dupla ação — de sistema de funcionamento — repetição, semiautomático e automático. A alternativa B contém os três sistemas de acionamento e é a única correta.",
+    "base": "Cartilha de Armamento e Tiro, Polícia Federal/Academia Nacional de Polícia, itens 2.5.1–2.5.3 (Quanto ao sistema de acionamento), p. 4; conferência independente no Manual de Manuseio Seguro de Arma de Fogo, Tribunal de Justiça do Amazonas, item 2.2.5, p. 8.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.99,
+      "source_title": "Cartilha de Armamento e Tiro — Polícia Federal/Academia Nacional de Polícia",
+      "source_location": "PDF p. 4, itens 2.5.1–2.5.3; conferência no Manual de Manuseio Seguro de Arma de Fogo (TJAM), PDF p. 8, item 2.2.5.",
+      "source_url": "https://www.gov.br/pf/pt-br/assuntos/armas/cartilha-de-armamento-e-tiro.pdf",
+      "candidate_mark": "B",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": [
+        "Cabeçalho OCR 'IES QuEstÃOO2' normalizado para 'QUESTÃO 02'.",
+        "Enunciado OCR 'Revólveres « pistolas' corrigido para 'Revólveres e pistolas'; 'q alternativa' corrigido para 'a alternativa'.",
+        "Marcadores A–D foram restituídos pela ordem das quatro alternativas; o marcador OCR 'O' da alternativa B foi normalizado para '(B)'.",
+        "Alternativa B: 'Dupia' corrigido para 'Dupla'.",
+        "Alternativa C: 'Dypte-Siiples' corrigido para 'Dupla-Simples'."
+      ],
+      "note": "O manifesto identifica file1-q002 como prova 1, ano 2022, questão 2, com marca candidata B e key_status visible_mark_not_official; o índice manda classificar a matéria. O DOCX/OCR localiza o item na Página 1, imagem IMG-20261012-WA0004. O corpus local foi consultado, mas não sustentou sozinho a resposta; foram usadas as duas fontes institucionais acima. O gabarito do arquivo 2 permanece em branco e não foi tratado como chave oficial."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 2",
+    "source_url": "https://www.gov.br/pf/pt-br/assuntos/armas/cartilha-de-armamento-e-tiro.pdf"
+  },
+  {
+    "id": "cfs30-file1-q003",
+    "disc": "Armamento e Munição",
+    "assunto": "Incidentes de tiro: falha na alimentação e falha na percussão",
+    "enunciado": "Analise as afirmativas abaixo referente aos incidentes de tiro:\nI. A falha na alimentação pode ocorrer pela má inserção do carregador no alojamento.\nII. A falha na alimentação pode ocorrer por conta do retém do carregador quebrado.\nIII. A falha na alimentação pode ocorrer pela quebra do percussor.\nAssinale a alternativa correta.",
+    "alts": [
+      {
+        "t": "Os itens I e III são falsos.",
+        "ok": false,
+        "erro": "I e III são falsos",
+        "motivo": "A afirmativa I é verdadeira, enquanto a III é falsa."
+      },
+      {
+        "t": "Os itens II e III são falsos.",
+        "ok": false,
+        "erro": "II e III são falsos",
+        "motivo": "A afirmativa II é verdadeira, enquanto a III é falsa."
+      },
+      {
+        "t": "Os itens I e II são verdadeiros.",
+        "ok": true,
+        "erro": "",
+        "motivo": "A inserção incorreta do carregador e defeito no seu retém comprometem a alimentação; quebra do percussor é falha de percussão."
+      },
+      {
+        "t": "Os itens II e III são verdadeiros.",
+        "ok": false,
+        "erro": "II e III são verdadeiros",
+        "motivo": "A afirmativa II é verdadeira, mas a III é falsa: percussor quebrado causa falha de percussão, não de alimentação."
+      }
+    ],
+    "resolucao": "A inserção incorreta do carregador impede que a munição seja levada à câmara, e um retém defeituoso compromete a fixação e a alimentação. A quebra do percussor caracteriza falha de percussão (nega), não falha de alimentação. Portanto, somente I e II são verdadeiras: alternativa C.",
+    "base": "Polícia Federal, ARMAS DE FOGO — SÍNTESE DE TEMAS PARA AVALIAÇÃO DE CAPACIDADE TÉCNICA (30/12/2020), cap. 5, item 5.4.1, pp. 60–61: inserção incorreta do carregador impede levar a munição à câmara e quebra do percussor causa nega; corroborado pela Nota Técnica SESP-MT N. 001, item 20.1 (Panes/Falhas), e pelo Quadro de Incidentes de Tiro da Escola de Material Bélico, Apostila de Armamento Leve 02, p. 12, que relaciona retém do carregador à falha na alimentação. URLs: https://www.gov.br/pf/pt-br/assuntos/armas/instrutores-de-armamento-e-tiro/orientacao-para-credenciamento/sintese-de-temas-para-avaliacao-de-capacidade-tecnica-30-12-2020.pdf ; https://www.sesp.mt.gov.br/documents/4713378/11963317/NOTA+N+001-+SESP+ARMAMENTO+edital+em+fase+de+elaborao+04_04_2018+-+FORMATADO+PUBLICAO%281%29.pdf ; https://pdfcoffee.com/apostila-volume-ii-armamento-leve-pdf-free.html",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.97,
+      "source_title": "ARMAS DE FOGO — SÍNTESE DE TEMAS PARA AVALIAÇÃO DE CAPACIDADE TÉCNICA, Polícia Federal",
+      "source_location": "Capítulo 5, item 5.4.1, pp. 60–61 (PDF; carregador inserido incorretamente e percussor quebrado); conferência cruzada em SESP-MT, item 20.1, e no Quadro de Incidentes de Tiro da Apostila de Armamento Leve 02, p. 12.",
+      "source_url": "https://www.gov.br/pf/pt-br/assuntos/armas/instrutores-de-armamento-e-tiro/orientacao-para-credenciamento/sintese-de-temas-para-avaliacao-de-capacidade-tecnica-30-12-2020.pdf",
+      "candidate_mark": "C",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "Rótulos OCR '1.', 'U.' e 'HI.' normalizados para I, II e III; 'O Os itens' normalizado para '(C) Os itens'; 'IH'/'HI' nas alternativas normalizados para II/III; 'Sica' removido como artefato OCR; palavras partidas em fim de linha reagrupadas.",
+      "note": "O DOCX/OCR põe o cabeçalho 'QUESTÃO 03' antes do bloco da Q6 (economia de meios) e, sem novo cabeçalho, traz o bloco de incidentes; o encadeamento das seis primeiras questões (pistola, acionamento, incidentes, balística, inteligência e economia) torna inequívoco que esse bloco é a Q3. O manifesto file1-q003 confirma prova 1, ano 2022 e marca C; seu topic_index só informa 'matéria por classificar' e não explicita páginas."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 3",
+    "source_url": "https://www.gov.br/pf/pt-br/assuntos/armas/instrutores-de-armamento-e-tiro/orientacao-para-credenciamento/sintese-de-temas-para-avaliacao-de-capacidade-tecnica-30-12-2020.pdf"
+  },
+  {
+    "id": "cfs30-file1-q004",
+    "disc": "Armamento e Munição",
+    "assunto": "Balística — subdivisões",
+    "enunciado": "No conceito de Balística temos subdivisões relativas à mecânica aplicada, assinale a alternativa correta.",
+    "alts": [
+      {
+        "t": "Militar, Forense e Particular.",
+        "ok": false,
+        "erro": "Militar, Forense e Particular",
+        "motivo": "Indica uma classificação por campo ou finalidade de aplicação, não as subdivisões técnicas preliminares da balística."
+      },
+      {
+        "t": "Externa, Interna e Terminal.",
+        "ok": true,
+        "erro": "",
+        "motivo": "É a divisão preliminar da balística em interna, externa e terminal."
+      },
+      {
+        "t": "Cinemática, Estática e Dinâmica.",
+        "ok": false,
+        "erro": "Cinemática, Estática e Dinâmica",
+        "motivo": "São disciplinas da mecânica, não as subdivisões preliminares da balística."
+      },
+      {
+        "t": "Termoquímica e termodinâmica.",
+        "ok": false,
+        "erro": "Termoquímica e termodinâmica",
+        "motivo": "São áreas ou fenômenos relacionados ao estudo físico do disparo, mas não formam a divisão técnica pedida."
+      }
+    ],
+    "resolucao": "A balística é uma área da Física (Mecânica) que estuda o movimento dos projéteis. Sua divisão preliminar é em balística interna, externa e terminal; portanto, a alternativa B é a única correta. A marcação candidata C não coincide com a resposta sustentada pelas fontes.",
+    "base": "Polícia Federal, ‘Armas de Fogo — Síntese de Temas para Avaliação de Capacidade Técnica’, cap. 10, item 10.1 (Introdução), PDF p. 91: a balística é área da Física (Mecânica) e divide-se preliminarmente em interna, externa e terminal; item 10.10, PDF p. 109, define a balística terminal. URL: https://www.gov.br/pf/pt-br/assuntos/armas/instrutores-de-armamento-e-tiro/orientacao-para-credenciamento/sintese-de-temas-para-avaliacao-de-capacidade-tecnica-30-12-2020.pdf. Checagem cruzada: M. B. Arakelian et al., ‘Bancada de testes de armas de fogo por acionamento remoto’, Revista Brasileira de Criminalística, 7(2), 2018, seção 1 (Introdução), p. 7, DOI http://dx.doi.org/10.15260/rbc.v7i2.252, descreve a balística como ramificação da mecânica aplicada e divide o estudo em interior, exterior e efeitos.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.99,
+      "source_title": "Armas de Fogo — Síntese de Temas para Avaliação de Capacidade Técnica (Polícia Federal)",
+      "source_location": "Capítulo 10, item 10.1 (Introdução), PDF p. 91; confirmação da definição de balística terminal no item 10.10, PDF p. 109",
+      "source_url": "https://www.gov.br/pf/pt-br/assuntos/armas/instrutores-de-armamento-e-tiro/orientacao-para-credenciamento/sintese-de-temas-para-avaliacao-de-capacidade-tecnica-30-12-2020.pdf",
+      "candidate_mark": "C",
+      "candidate_mark_agrees": false,
+      "ocr_corrections": "‘mecênica’ corrigido para ‘mecânica’; marcador OCR ‘(O)’ da alternativa C corrigido para ‘(C)’; normalizados espaços e quebras de linha; ‘cinemática’ capitalizada como ‘Cinemática’. DOCX e transcrição confirmam o mesmo enunciado e as quatro alternativas.",
+      "note": "Manifesto: file1, prova 1, questão 4, ano 2022, marcação visível C e key_status visible_mark_not_official; a questão aparece na página 1 do OCR (imagem IMG-20261012-WA0004). O corpus local de apostilas foi consultado, mas não contém trecho substantivo sobre a classificação da balística; por isso a validação usa a fonte oficial da Polícia Federal e a checagem acadêmica independente de 2018. Não há conflito de regra temporal."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 4",
+    "source_url": "https://www.gov.br/pf/pt-br/assuntos/armas/instrutores-de-armamento-e-tiro/orientacao-para-credenciamento/sintese-de-temas-para-avaliacao-de-capacidade-tecnica-30-12-2020.pdf"
+  },
+  {
+    "id": "cfs30-file1-q005",
+    "disc": "Atividade de Inteligência",
+    "assunto": "Produção de textos de Inteligência",
+    "enunciado": "Com base na apostila estudada. Devem ser valorizadas no estilo de produção de textos de Inteligência as seguintes características, exceto:",
+    "alts": [
+      {
+        "t": "Clareza",
+        "ok": false,
+        "erro": "",
+        "motivo": "É característica valorizada: a apostila descreve a produção de conhecimentos claros e o princípio da simplicidade como claro e conciso."
+      },
+      {
+        "t": "Imparcialidade",
+        "ok": false,
+        "erro": "",
+        "motivo": "É característica/princípio valorizado: a produção deve ser imparcial e isenta de ideias preconcebidas ou tendenciosas."
+      },
+      {
+        "t": "Sensacionalismo",
+        "ok": true,
+        "erro": "",
+        "motivo": "É a exceção: sensacionalismo não é qualidade de um texto de Inteligência, que deve ser objetivo, claro, preciso e imparcial."
+      },
+      {
+        "t": "Objetividade",
+        "ok": false,
+        "erro": "",
+        "motivo": "É princípio valorizado da Atividade de Inteligência, associado a objetivos claros e delimitados e à ausência de esforços desnecessários."
+      }
+    ],
+    "resolucao": "A alternativa C é a exceção. Clareza, imparcialidade e objetividade são qualidades/princípios da produção de Inteligência; sensacionalismo é incompatível com a análise isenta e orientada por evidências.",
+    "base": "Fonte local: all_materials_corpus.txt, seção INTELIGÊNCIA CFS 31 2026, pp. 51–55 (conhecimentos precisos, claros e imparciais; simplicidade; objetividade e imparcialidade). Conferência independente: Curso de Introdução à Atividade de Inteligência (CBMAC/DEP-SEGEN), Aula 2, §§ 2.3.3, 2.3.7 e 2.3.8, pp. 62–64, https://ensino.cbmac.ac.gov.br/mod/resource/view.php?id=1166. Fonte oficial adicional: Doutrina da Atividade de Inteligência (ABIN, 2023), pp. 31–34 e 90–91, https://www.gov.br/abin/pt-br/centrais-de-conteudo/publicacoes/doutrina/Doutrina-da-Atividade-de-Inteligencia-2023.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.88,
+      "source_title": "Curso de Introdução à Atividade de Inteligência — Aula 2 (CBMAC/DEP-SEGEN)",
+      "source_location": "§§ 2.3.3, 2.3.7 e 2.3.8, pp. 62–64; conferido com ABIN, Doutrina da Atividade de Inteligência (2023), pp. 31–34 e 90–91",
+      "source_url": "https://ensino.cbmac.ac.gov.br/mod/resource/view.php?id=1166",
+      "candidate_mark": "C",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "Questão localizada no DOCX e no OCR da prova 1, página 1. Normalizadas quebras de linha e o artefato ‘Clareza o’ para ‘Clareza’; ‘Nesecionismo’ foi corrigido contextualmente para ‘Sensacionalismo’.",
+      "note": "Manifesto candidate_items.json confirma file1, questão 5, ano 2022 e marca C, explicitamente como marcação visível não oficial. O OCR do arquivo 2 mantém gabarito em branco (‘____’); seu índice registra Prova 01 nas páginas 1–9, cabeçalho/ano 2023 e matérias não identificada, Policiamento Ostensivo, Procedimentos Administrativos, Abuso de Autoridade e Trânsito. Não foi usado como gabarito oficial."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 5",
+    "source_url": "https://ensino.cbmac.ac.gov.br/mod/resource/view.php?id=1166"
+  },
+  {
+    "id": "cfs30-file1-q006",
+    "disc": "Inteligência",
+    "assunto": "Características da Inteligência de Segurança Pública — economia de meios",
+    "enunciado": "Assinale a alternativa correta. A característica da atividade de Inteligência denominada economia de meios é",
+    "alts": [
+      {
+        "t": "É a característica da Inteligência de Segurança Pública que permite otimizar os recursos disponíveis, o que é proporcionado pela produção de conhecimentos objetivos, precisos e oportunos.",
+        "ok": true,
+        "erro": "",
+        "motivo": "A apostila define a economia de meios pela otimização da utilização dos recursos disponíveis mediante a produção de conhecimentos objetivos, precisos e oportunos."
+      },
+      {
+        "t": "É a característica da Inteligência de Segurança Pública (ISP) que qualifica como órgão de assessoramento, constituindo-se como meio para o planejamento das ações da atividade de segurança pública e produzindo conhecimento para o processo decisório.",
+        "ok": false,
+        "erro": "órgão de assessoramento",
+        "motivo": "O trecho descreve a função de assessoria e subsídio ao processo decisório, não a economia de meios."
+      },
+      {
+        "t": "É a característica da Inteligência de Segurança Pública (ISP) de obter dados não disponíveis e protegidos, em um universo antagônico, uma vez que os dados relevantes do ambiente criminal se encontram, invariavelmente, protegidos.",
+        "ok": false,
+        "erro": "obter dados não disponíveis e protegidos",
+        "motivo": "O trecho descreve a busca de dados em universo antagônico, não a economia de meios."
+      },
+      {
+        "t": "É a característica da Inteligência de Segurança Pública (ISP) que visa garantir sua existência protegida de ameaças.",
+        "ok": false,
+        "erro": "garantir sua existência protegida de ameaças",
+        "motivo": "O trecho descreve a segurança da atividade e a salvaguarda contra ameaças, não a economia de meios."
+      }
+    ],
+    "resolucao": "A alternativa A é correta. Na apostila, a característica de economia de meios/planejar-integrar permite otimizar os recursos disponíveis por meio da produção de conhecimentos objetivos, precisos e oportunos. B trata de assessoria, C de busca de dados e D de segurança da atividade.",
+    "base": "Fonte local: INTELIGÊNCIA CFS 31 2026, Apostila de Inteligência CFS_31_2026.pdf, p. 52, no corpus all_materials_corpus.txt; o trecho define que a característica permite otimizar a utilização dos recursos disponíveis pela produção de conhecimentos objetivos, precisos e oportunos.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.99,
+      "source_title": "INTELIGÊNCIA CFS 31 2026",
+      "source_location": "Apostila de Inteligência CFS 31 2026, p. 52 (características da ISP, item PLANEJAR/INTEGRAR); prova 1, p. 1, imagem IMG-20261012-WA0004.",
+      "source_url": "",
+      "candidate_mark": "A",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "Reconstituído o marcador OCR “Ep)” como “(A)” e “(8)” como “(B)”; corrigidos os acentos em “característica”, a conjunção “e” em “precisos e oportunos”, “meio” no lugar de “melo”; unidos hifens de quebra de linha em “constituindo-se” e “ameaças”. Não foi acrescentado texto ausente.",
+      "note": "O manifesto confirma file1, prova 1, questão 6, ano 2022, marcação visível A e índice com matéria ainda por classificar. Enunciado e quatro alternativas conferidos no DOCX e na transcrição OCR; a marcação candidata não é gabarito oficial. O gabarito do arquivo 2 está em branco e não foi usado."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 6"
+  },
+  {
+    "id": "cfs30-file1-q008",
+    "disc": "Inteligência",
+    "assunto": "Ciclo da Produção do Conhecimento (CPC): fase de reunião de dados",
+    "enunciado": "Analise o texto abaixo e assinale a alternativa correta.\nConforme a apostila, \"é a fase do Ciclo da Produção do Conhecimento (CPC) na qual as Agências de inteligência (AI) procuram obter os dados necessários, realizando, metódica e sistematicamente, ações que lhes possibilitem produzir o conhecimento\".",
+    "alts": [
+      {
+        "t": "Informante.",
+        "ok": false,
+        "erro": "Informante",
+        "motivo": "Não é fase do CPC; designa pessoa/fonte, não a etapa metodológica descrita."
+      },
+      {
+        "t": "Ação de coleta.",
+        "ok": false,
+        "erro": "Ação de coleta",
+        "motivo": "É uma modalidade de ação de inteligência dentro da reunião de dados, não o nome da fase do CPC."
+      },
+      {
+        "t": "Reunião de dados.",
+        "ok": true,
+        "erro": "",
+        "motivo": "É a fase do CPC em que a agência procura obter os dados necessários de modo metódico e sistemático."
+      },
+      {
+        "t": "Relatório do Agente.",
+        "ok": false,
+        "erro": "Relatório do Agente",
+        "motivo": "É produto/documento, não fase do CPC."
+      }
+    ],
+    "resolucao": "O enunciado descreve a fase do CPC destinada a obter os dados necessários por ações metódicas e sistemáticas. Essa fase é a Reunião de dados. Ação de coleta é apenas uma das ações empregadas nessa fase; informante e relatório do agente não são fases do ciclo.",
+    "base": "Fonte local: INTELIGÊNCIA CFS 31 2026, p. 59, seção ‘Metodologia da Produção do Conhecimento’, que lista PLANEJAMENTO, REUNIÃO, PROCESSAMENTO e FORMALIZAÇÃO e associa REUNIÃO a ‘coletar e organizar’. Checagem independente: Doutrina Nacional de Inteligência Penitenciária, p. 24, § 2.4.2 — ‘Reunião de dados e/ou conhecimentos’, que define a fase como aquela em que a agência procura obter os dados necessários, realizando metódica e sistematicamente ações para produzir o conhecimento; o mesmo trecho distingue ações de coleta e busca.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.94,
+      "source_title": "Doutrina Nacional de Inteligência Penitenciária",
+      "source_location": "p. 24, seção 2.4.2 — Reunião de dados e/ou conhecimentos",
+      "source_url": "https://bibliotecadigital.mj.gov.br/bitstream/1/6424/1/Doutrina_Nacional_de_Inteligencia_Penitenciaria.pdf",
+      "candidate_mark": "C",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "No enunciado, normalizados apenas capitalização e pontuação evidentes (‘Analise O’ para ‘Analise o’ e fechamento da citação). Nas alternativas, ‘teunião’ foi corrigido para ‘Reunião’; o ‘x’ após essa linha foi tratado como marcação manuscrita, não texto; o ruído ‘”’ após ‘Ação de coleta’ foi removido e a pontuação foi normalizada. Os rótulos (B) e (C), omitidos pelo OCR, foram recuperados pela ordem sequencial inequívoca entre (A) e (D), sem acréscimo de conteúdo substantivo.",
+      "note": "O manifesto confirma file1, prova 1, questão 8, ano 2022 e marcação visível C; o índice classifica a matéria como ‘por classificar’. O DOCX e a transcrição OCR trazem o mesmo enunciado na página 1 da prova (páginas renderizadas 3–4 do DOCX). O arquivo 2 tem gabarito de identificação em branco e não foi usado como chave. A resposta é sustentada pela apostila local e pela doutrina oficial do MJ; a marca candidata C coincide com a resposta validada."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 8",
+    "source_url": "https://bibliotecadigital.mj.gov.br/bitstream/1/6424/1/Doutrina_Nacional_de_Inteligencia_Penitenciaria.pdf"
+  },
+  {
+    "id": "cfs30-file1-q010",
+    "disc": "Direito Constitucional",
+    "assunto": "Crimes inafiançáveis e prisão em flagrante de Deputados e Senadores",
+    "enunciado": "Questão 10. A prática do racismo ou tortura, o tráfico ilícito de entorpecentes e drogas afins, o terrorismo, os definidos como crimes hediondos e a ação de grupos armados, civis ou militares, possuem um ponto em comum. Sabe-se que tal ponto autorizaria um policial militar a prender um Senador ou Deputado Federal em flagrante delito, qual seria essa característica? Assinale a alternativa correta.",
+    "alts": [
+      {
+        "t": "Todos são crimes inafiançáveis (vedada a fiança)",
+        "ok": true,
+        "erro": "",
+        "motivo": "Correta: todos os crimes ou ações listados têm a característica constitucional de serem inafiançáveis."
+      },
+      {
+        "t": "Todos são crimes imprescritíveis.",
+        "ok": false,
+        "erro": "imprescritíveis",
+        "motivo": "A Constituição reserva a imprescritibilidade, neste conjunto, ao racismo e à ação de grupos armados contra a ordem constitucional e o Estado Democrático; ela não alcança todos os itens listados."
+      },
+      {
+        "t": "Todos são suscetíveis (permissão concessão) de Anistia, Graça ou Indulto.",
+        "ok": false,
+        "erro": "suscetíveis",
+        "motivo": "A Constituição estabelece que os crimes do art. 5º, XLIII, são insuscetíveis de graça ou anistia; além disso, a afirmação generaliza esse efeito para todo o conjunto e inclui indulto."
+      },
+      {
+        "t": "Todos são crimes afiançáveis (permitido a fiança).",
+        "ok": false,
+        "erro": "afiançáveis",
+        "motivo": "É o oposto da regra constitucional: os itens listados são inafiançáveis."
+      }
+    ],
+    "resolucao": "Os arts. 5º, XLII–XLIV, da Constituição classificam como inafiançáveis o racismo, a tortura, o tráfico ilícito de entorpecentes, o terrorismo, os crimes hediondos e a ação de grupos armados contra a ordem constitucional e o Estado Democrático. O art. 53, § 2º, permite a prisão de Deputado ou Senador em flagrante apenas por crime inafiançável. Portanto, a resposta é A.",
+    "base": "Fonte local: Apostila Direitos Humanos CFS – Vol. I, seção ‘mandados expressos de criminalização’, art. 5º, XLII–XLIV, linhas 1358–1366 do texto extraído, que confirma as classificações de inafiançabilidade, imprescritibilidade e insuscetibilidade. Fonte oficial: Constituição da República Federativa do Brasil, Planalto, arts. 5º, XLII–XLIV, e 53, § 2º, https://www.planalto.gov.br/ccivil_03/constituicao/constituicaocompilado.htm. Checagem independente: Senado Federal, ‘Crime inafiançável’, item do Glossário Jurídico, https://www12.senado.leg.br/manualdecomunicacao/guia-juridico/crime-inafiancavel.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.98,
+      "source_title": "Constituição da República Federativa do Brasil (Planalto); Senado Federal, Glossário Jurídico",
+      "source_location": "Constituição: art. 5º, XLII–XLIV, e art. 53, § 2º; Senado: item ‘Crime inafiançável’",
+      "source_url": "https://www.planalto.gov.br/ccivil_03/constituicao/constituicaocompilado.htm",
+      "candidate_mark": "A",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "Normalizadas quebras de linha e capitalização; ‘tráfico lícito’ foi corrigido para ‘tráfico ilícito’ conforme a formulação constitucional; ‘Anis | tia’ foi reunido como ‘Anistia’. As etiquetas corrompidas ‘(Erodos’, ‘a(B)’ e ‘0)’ foram recuperadas, pela ordem inequívoca, como ‘(A) Todos’, ‘(B)’ e ‘(C)’. O artigo inicial de ‘prática’ foi normalizado para ‘A prática’ como correção mínima evidente. Não foi alterado o texto peculiar da alternativa C (‘permissão concessão’), que foi preservado como recuperado.",
+      "note": "O manifesto confirma file1, prova 1, questão 10, ano 2022, marcação candidata visível A e índice ‘matéria por classificar’; não fornece página ou disciplina específica. O DOCX e o OCR localizam o item na página 2 da prova, na continuação renderizada nas páginas 5–6 do DOCX (OCR, linhas 229–250). O arquivo 2 traz a identificação de questão 10 com alternativa em branco e não foi usado como gabarito. A regra constitucional relevante é a mesma no ano da prova e atualmente: a prisão excepcional de parlamentar exige flagrante de crime inafiançável (art. 53, § 2º), e os itens listados compartilham essa característica (art. 5º, XLII–XLIV)."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 10",
+    "source_url": "https://www.planalto.gov.br/ccivil_03/constituicao/constituicaocompilado.htm"
+  },
+  {
+    "id": "cfs30-file1-q011",
+    "disc": "Direito Penal e Penal Militar",
+    "assunto": "Competência da Justiça Militar Estadual",
+    "enunciado": "Os crimes militares cometidos contra civis e as ações judiciais contra atos disciplinares militares, no âmbito da Justiça Militar Estadual, serão julgados e processados pelo:",
+    "alts": [
+      {
+        "t": "Conselho Especial de Justiça.",
+        "ok": false,
+        "erro": "Conselho Especial de Justiça",
+        "motivo": "Não é o órgão competente para o julgamento singular dos crimes militares cometidos contra civis na Justiça Militar Estadual."
+      },
+      {
+        "t": "Juiz de Direito, singularmente.",
+        "ok": true,
+        "erro": "",
+        "motivo": "É a competência expressamente atribuída pelo art. 125, § 5º, da Constituição Federal."
+      },
+      {
+        "t": "Juiz eleitoral.",
+        "ok": false,
+        "erro": "Juiz eleitoral",
+        "motivo": "A Justiça Eleitoral não é o ramo competente para essa matéria."
+      },
+      {
+        "t": "Conselho Permanente de Justiça.",
+        "ok": false,
+        "erro": "Conselho Permanente de Justiça",
+        "motivo": "O Conselho de Justiça julga os demais crimes militares; o § 5º reserva ao juiz de direito o julgamento singular dos crimes contra civis."
+      }
+    ],
+    "resolucao": "O art. 125, § 5º, da Constituição Federal atribui aos juízes de direito do juízo militar o processamento e julgamento, singularmente, dos crimes militares cometidos contra civis e das ações contra atos disciplinares militares. Portanto, a resposta é B.",
+    "base": "Fonte local: Provão do CFS 30 (arquivo 1), Página 2 — questões da imagem IMG-20261012-WA0006, bloco da questão 11 (DOCX/PDF editável, pp. 5–6); corpus local, apostila Direito Penal Militar — 1TEN Coene, CFS/PMMS/2026, seção sobre Justiça Militar Estadual. Fonte oficial: Constituição Federal, art. 125, § 5º, corroborada pela página do STF.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.99,
+      "source_title": "Constituição Federal — art. 125, § 5º (Supremo Tribunal Federal)",
+      "source_location": "Art. 125, § 5º; página oficial do STF, com referência correlata ao HC 93.076",
+      "source_url": "https://portal.stf.jus.br/constituicao-supremo/artigo.asp?abrirBase=CF&abrirArtigo=125",
+      "candidate_mark": "B",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "No enunciado: ‘clvis’ corrigido para ‘civis’ e ‘às casa’ para ‘as ações’; no item B, ‘GB Juiz’ corrigido para ‘(B) Juiz’. O marcador da questão aparece corrompido no OCR (‘- UESTÁG AS’), mas o bloco é inequívoco pela sequência e pelo texto. No arquivo 2, o gabarito de conferência está em branco.",
+      "note": "O manifesto candidate_items.json identifica file1-q011 como prova 1, ano 2022, marcação candidata B e marca visível não oficial. A regra do art. 125, § 5º, incluída pela EC 45/2004, já vigorava no ano da prova e permanece aplicável; não há mudança temporal que altere a resposta. O STF reproduz literalmente a competência do juiz de direito do juízo militar."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 11",
+    "source_url": "https://portal.stf.jus.br/constituicao-supremo/artigo.asp?abrirBase=CF&abrirArtigo=125"
+  },
+  {
+    "id": "cfs30-file1-q012",
+    "disc": "Direito Penal e Penal Militar",
+    "assunto": "Crimes inafiançáveis",
+    "enunciado": "É de suma importância conhecermos quais são os crimes inafiançáveis, pois, em alguns casos, deverá o policial militar tomar ou não providências específicas, a depender das características do indivíduo abordado. Dentre as alternativas abaixo, qual não é considerada pelo nosso ordenamento jurídico como crime inafiançável?",
+    "alts": [
+      {
+        "t": "A prática do racismo ou tortura, o tráfico ilícito de entorpecentes e drogas afins e o terrorismo.",
+        "ok": false,
+        "erro": "",
+        "motivo": "A Constituição, art. 5º, XLII e XLIII, considera inafiançáveis o racismo, a tortura, o tráfico ilícito de entorpecentes e drogas afins e o terrorismo."
+      },
+      {
+        "t": "Os previstos na Lei de Crimes Hediondos.",
+        "ok": false,
+        "erro": "",
+        "motivo": "Os crimes hediondos estão expressamente abrangidos pelo art. 5º, XLIII, da Constituição como inafiançáveis."
+      },
+      {
+        "t": "Ação de grupos armados, civis ou militares, contra a ordem constitucional e o Estado Democrático.",
+        "ok": false,
+        "erro": "",
+        "motivo": "A hipótese está expressamente prevista como crime inafiançável e imprescritível no art. 5º, XLIV, da Constituição."
+      },
+      {
+        "t": "Crimes Militares.",
+        "ok": true,
+        "erro": "",
+        "motivo": "Crimes militares, considerados genericamente, não formam uma categoria constitucional geral de crimes inafiançáveis; por isso são a exceção pedida."
+      }
+    ],
+    "resolucao": "Os itens A, B e C correspondem às hipóteses de inafiançabilidade dos arts. 5º, XLII a XLIV, da Constituição. Crimes militares, em geral, não são classificados como inafiançáveis apenas por serem militares. Logo, a resposta é D.",
+    "base": "Fonte local: Apostila Direitos Humanos, Ética e Cidadania, 31º Curso de Formação de Sargento, p. 27 do corpus local, que reproduz o art. 5º, XLII–XLIV. Checagem independente: Constituição da República Federativa do Brasil, art. 5º, XLII–XLIV, Planalto.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.99,
+      "source_title": "Constituição da República Federativa do Brasil — Planalto; Apostila Direitos Humanos, Ética e Cidadania",
+      "source_location": "Constituição, art. 5º, XLII–XLIV; apostila local, p. 27",
+      "source_url": "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm",
+      "candidate_mark": "D",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "Reconstrução da ordem do texto em colunas e remoção de fragmentos de questões vizinhas; ‘quel’→‘qual’; ‘Ilicito’→‘ilícito’; ‘Miltares’→‘Militares’; ‘(BD)’→‘(D)’; normalização de quebras em ‘militar’ e ‘específicas’. Não foi inventado texto ausente.",
+      "note": "Questão conferida no Provao_CFS30_link1.docx, página 5 do DOCX (Página 2 da imagem IMG-20261012-WA0006), e no OCR, linhas 173–190. O manifesto identifica file1-q012 como prova 1, ano 2022, marca visível D e matéria ainda não classificada; a marca é hipótese, não gabarito oficial. O índice do arquivo 2 foi conferido (Prova 01: páginas 1–9, ano 2023, matérias listadas) e seu gabarito está em branco. A regra constitucional citada é compatível com a prova de 2022; não há alteração temporal pertinente aos incisos usados."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 12",
+    "source_url": "https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm"
+  },
+  {
+    "id": "cfs30-file1-q014",
+    "disc": "Direito Administrativo",
+    "assunto": "Competência administrativa: delegação e avocação",
+    "enunciado": "Assinale a alternativa correta. O Subcomandante-Geral editou portaria transferindo a competência aos Grandes Comandos (CPA'S, CPE, CPM) para realização de movimentação (transferência de OPM's) de policiais militares dentro do mesmo território de atuação. A título de exemplo, o Comandante do CPM transferiu o Sargento “FULANO” do 9º BPM para o 10º BPM. Neste caso, qual instituto do Direito Administrativo está ocorrendo no tocante à competência legal para realizar o ato?",
+    "alts": [
+      {
+        "t": "Avocação.",
+        "ok": false,
+        "erro": "Avocação",
+        "motivo": "Avocação é a assunção temporária, por autoridade superior, de competência atribuída a órgão hierarquicamente inferior; não é a transferência descrita no enunciado."
+      },
+      {
+        "t": "Delegação.",
+        "ok": true,
+        "erro": "",
+        "motivo": "O órgão ou titular transfere o exercício de parte de sua competência a outro órgão ou titular, como na portaria descrita."
+      },
+      {
+        "t": "Agregação.",
+        "ok": false,
+        "erro": "Agregação",
+        "motivo": "Não é o instituto administrativo de transferência do exercício de competência entre órgãos ou titulares."
+      },
+      {
+        "t": "Reparação.",
+        "ok": false,
+        "erro": "Reparação",
+        "motivo": "Não corresponde à transferência ou distribuição do exercício de competência administrativa."
+      }
+    ],
+    "resolucao": "A hipótese é de delegação: a autoridade competente autoriza outro órgão ou titular a exercer parte de sua competência. A avocação teria sentido inverso, pois o superior assumiria temporariamente competência de órgão inferior. Portanto, a alternativa correta é B.",
+    "base": "Provao_CFS30_link1.docx, ‘Página 2 — questões da imagem IMG-20261012-WA0006’, p. 5–6/47; Provao_CFS30_link1.txt, linhas 210–227. Confirmação normativa: Lei nº 9.784/1999, Capítulo VI, arts. 11–15, especialmente arts. 12 e 15, Planalto (https://www.planalto.gov.br/ccivil_03/leis/l9784.htm). Checagem independente: Decreto-Lei nº 200/1967, arts. 10–12, Planalto (https://www.planalto.gov.br/ccivil_03/decreto-lei/del0200.htm).",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.98,
+      "source_title": "Lei nº 9.784, de 29 de janeiro de 1999 — Capítulo VI, Da Competência",
+      "source_location": "Arts. 11–15, especialmente art. 12 (delegação) e art. 15 (avocação); regra consultada é compatível com a vigente em 2022.",
+      "source_url": "https://www.planalto.gov.br/ccivil_03/leis/l9784.htm",
+      "candidate_mark": "B",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": [
+        "‘edi-toú’/quebra de linha foi normalizado para ‘editou’",
+        "‘5, CPE, CPM)’ foi recomposto como ‘(CPA'S, CPE, CPM)’ a partir da quebra de coluna e da sigla contextual",
+        "‘Comar-dante’ foi normalizado para ‘Comandante’",
+        "‘109 BPM’ foi corrigido para ‘10º BPM’, leitura ordinal inequívoca no contexto",
+        "‘0 ato’ foi corrigido para ‘o ato’",
+        "Removido o artefato OCR ‘(>’ após ‘Delegação’"
+      ],
+      "note": "A marcação B é apenas marcação visível do candidato, não gabarito oficial; ela coincide com a resposta sustentada pela legislação. O corpus local foi consultado, mas não trouxe uma definição geral mais direta de delegação; por isso a fundamentação principal é a legislação oficial, com checagem independente no Decreto-Lei nº 200/1967. Não foi identificada alteração material entre 2022 e o texto vigente consultado para esta distinção."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 14",
+    "source_url": "https://www.planalto.gov.br/ccivil_03/leis/l9784.htm"
+  },
+  {
+    "id": "cfs30-file1-q015",
+    "disc": "Direito Administrativo Militar",
+    "assunto": "Atributos do ato administrativo",
+    "enunciado": "Durante uma abordagem policial, o cidadão desordeiro se recusa a acatar a ordem legal para colocar as mãos na cabeça. Os policiais militares, por sua vez, munidos de informações de que aquele cidadão é o sujeito infrator armado, [trecho OCR corrompido: ‘con- que há fundada suspeita’]. Nesta situação, utilizando dos meios legais imperativos, sem necessitar acionar o Poder Judiciário para expedir mandado de busca, realizam a busca pessoal/revista, onde localizam uma pistola PT.40 com numeração raspada, bem como constatam que o indivíduo possui mandado de prisão em seu desfavor. Nesta situação, temos diversos atributos do ato administrativo. Qual das alternativas abaixo não é considerado um atributo do ato administrativo:",
+    "alts": [
+      {
+        "t": "Presunção de Inocência.",
+        "ok": false,
+        "erro": "Presunção de Inocência",
+        "motivo": "Não é atributo do ato administrativo; é garantia/princípio constitucional de não culpabilidade."
+      },
+      {
+        "t": "Presunção de Legitimidade.",
+        "ok": true,
+        "erro": "",
+        "motivo": "É expressamente listada como atributo do ato administrativo."
+      },
+      {
+        "t": "Autoexecutoriedade.",
+        "ok": false,
+        "erro": "",
+        "motivo": "É expressamente listada como atributo do ato administrativo."
+      },
+      {
+        "t": "Exigibilidade/Coercibilidade.",
+        "ok": false,
+        "erro": "",
+        "motivo": "É expressamente listada como atributo do ato administrativo."
+      }
+    ],
+    "resolucao": "A alternativa A é a única que não corresponde a atributo do ato administrativo. A presunção de legitimidade, a autoexecutoriedade e a exigibilidade/coercibilidade integram a lista doutrinária de atributos; a presunção de inocência é garantia constitucional ligada à responsabilização penal, não atributo do ato administrativo.",
+    "base": "Fonte local: Apostila Processos e Procedimentos Administrativos CFS T31, seção 2.1/2.2, pp. 9–10 do PDF no corpus local: presunção de legitimidade dos atos administrativos e, no poder de polícia, autoexecutoriedade e coercibilidade. Checagem independente: Direito Administrativo — Apostila Completa (ESESP/ES), seção 2.10, PDF p. 25, que enumera presunção de legitimidade, exigibilidade/coercibilidade e auto-executoriedade como atributos. Checagem contextual da busca pessoal: STJ, ‘A interpretação do STJ sobre as possibilidades de busca pessoal e a validade das provas encontradas’, artigo 244 do CPP, https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias/2025/30032025-A-interpretacao-do-STJ-sobre-as-possibilidades-de-busca-pessoal-e-a-validade-das-provas-encontradas.aspx.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.95,
+      "source_title": "Direito Administrativo — Apostila Completa (ESESP/ES)",
+      "source_location": "Seção 2.10, ‘Atributos ou Qualidades Jurídicas do Ato Administrativo’, PDF p. 25",
+      "source_url": "https://esesp.es.gov.br/Media/esesp/Apostilas/Apostila%20Completa%20-%20Direito%20Adm.pdf",
+      "candidate_mark": "A",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": [
+        "Recompostas as quebras de linha ‘ca / beça’ e ‘infor- / mações’.",
+        "Normalizado ‘PT. 40’ para ‘PT.40’.",
+        "Normalizado ‘Auto Executoriedade’ para ‘Autoexecutoriedade’."
+      ],
+      "note": "Manifesto candidate_items.json confirma file1, questão 15, ano 2022 e marca candidata A; a própria prova identifica a marca como não oficial. A questão está no DOCX original, p. 6, sob ‘Página 2 — questões da imagem IMG-20261012-WA0006’, e no OCR nas linhas 238–267. O trecho ‘con- que há fundada suspeita’ aparece corrompido/intercalado no OCR e foi sinalizado sem completar texto ausente; isso não altera a identificação das quatro alternativas nem da resposta. A regra dos atributos é a mesma no ano da prova e atualmente. Fonte pública oficial aberta e lida: ESESP, seção 2.10/PDF p. 25. Checagem contextual pública oficial adicional: STJ, notícia acima, seção sobre o art. 244 do CPP, que confirma busca pessoal sem mandado em caso de prisão ou fundada suspeita."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 15",
+    "source_url": "https://esesp.es.gov.br/Media/esesp/Apostilas/Apostila%20Completa%20-%20Direito%20Adm.pdf"
+  },
+  {
+    "id": "cfs30-file1-q016",
+    "disc": "Direito Administrativo",
+    "assunto": "Poder discricionário e poderes da Administração Pública",
+    "enunciado": "Assinale a alternativa correta. É a liberdade que o ordenamento jurídico confere ao Administrador para atuar em certas situações de acordo com o juízo de conveniência e oportunidade, mas sempre dentro dos limites da lei.",
+    "alts": [
+      {
+        "t": "Arbitrariedade.",
+        "ok": false,
+        "erro": "Arbitrariedade",
+        "motivo": "Arbitrariedade é atuação contrária à lei ou que excede seus limites; não é liberdade juridicamente conferida ao administrador."
+      },
+      {
+        "t": "Vinculação.",
+        "ok": false,
+        "erro": "Vinculação",
+        "motivo": "Na atuação vinculada, a norma predetermina completamente o único comportamento possível, sem a margem de escolha descrita no enunciado."
+      },
+      {
+        "t": "Discricionariedade.",
+        "ok": true,
+        "erro": "",
+        "motivo": "A discricionariedade é a margem de liberdade conferida pela lei para escolher, entre soluções legalmente possíveis, a mais conveniente e oportuna, sempre dentro dos limites legais."
+      },
+      {
+        "t": "Obrigatoriedade.",
+        "ok": false,
+        "erro": "Obrigatoriedade",
+        "motivo": "Obrigatoriedade não designa o poder administrativo de escolher segundo conveniência e oportunidade; corresponde à imposição de conduta, não à margem discricionária."
+      }
+    ],
+    "resolucao": "A definição corresponde à discricionariedade: a lei deixa ao administrador uma margem de escolha quanto à conveniência e oportunidade, mas a decisão continua limitada pela legalidade. Portanto, a alternativa correta é C.",
+    "base": "Fonte local: Apostila Processos e Procedimentos Administrativos, CFS, 2026, seção \"PODERES DA ADMINISTRAÇÃO PÚBLICA MILITAR\", p. 10, no corpus corpus textual das apostilas (linhas 65007–65014). A apostila define poder discricionário como margem de liberdade para escolher a solução mais oportuna e conveniente e o distingue do poder arbitrário. Conferência oficial: Lei nº 9.784/1999, arts. 2º e 53, Planalto.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.99,
+      "source_title": "Apostila Processos e Procedimentos Administrativos (CFS, 2026); Lei nº 9.784/1999",
+      "source_location": "Apostila: seção \"PODERES DA ADMINISTRAÇÃO PÚBLICA MILITAR\", p. 10, linhas 65007–65014 do corpus local. Conferência: arts. 2º e 53.",
+      "source_url": "https://www.planalto.gov.br/ccivil_03/leis/l9784.htm",
+      "candidate_mark": "C",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "Normalizados os hifens de quebra de linha em \"ordenamento\" e \"oportunidade\"; corrigida a pontuação OCR \"correta, É\" para \"correta. É\"; reinserido o marcador \"(C)\" antes de \"Discricionariedade\", omitido no OCR/DOCX. Nenhuma palavra sem suporte foi inventada.",
+      "note": "O DOCX original e a transcrição localizam a questão na página 4 de 17, imagem IMG-20261012-WA0008. O manifesto confirma file1-q016, prova 1, ano 2022 e marcação visível C (não oficial), mas seu topic_index é genérico e não fornece página ou matéria específica. O conceito é sustentado pela apostila local e conferido na lei oficial; não há contexto temporal que altere a resposta."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 16",
+    "source_url": "https://www.planalto.gov.br/ccivil_03/leis/l9784.htm"
+  },
+  {
+    "id": "cfs30-file1-q017",
+    "disc": "Direitos Humanos",
+    "assunto": "Código de Conduta da ONU para Funcionários Responsáveis pela Aplicação da Lei: uso da força e proibição de tortura",
+    "enunciado": "Com base no Código de Conduta das Nações Unidas para os funcionários responsáveis pela aplicação da lei, assinale a alternativa incorreta.",
+    "alts": [
+      {
+        "t": "Os funcionários responsáveis pela aplicação da lei devem sempre cumprir o dever que a lei lhes impõe, servindo a comunidade e protegendo todas as pessoas contra atos ilegais.",
+        "ok": false,
+        "erro": "",
+        "motivo": "Está de acordo com o art. 1º do Código de Conduta."
+      },
+      {
+        "t": "No cumprimento do dever, os funcionários responsáveis pela aplicação da lei devem respeitar e proteger a dignidade humana, manter e apoiar os direitos humanos de todas as pessoas.",
+        "ok": false,
+        "erro": "",
+        "motivo": "Está de acordo com o art. 2º do Código de Conduta."
+      },
+      {
+        "t": "Os funcionários responsáveis pela aplicação da lei podem empregar a força sempre que achar necessária e na medida que desejar para o cumprimento do seu dever.",
+        "ok": true,
+        "erro": "sempre que achar necessária e na medida que desejar",
+        "motivo": "É a incorreta: o art. 3º limita o uso da força às hipóteses em que seja estritamente necessário e somente na medida exigida para o cumprimento do dever."
+      },
+      {
+        "t": "Nenhum funcionário responsável pela aplicação da lei pode infligir, instigar ou tolerar qualquer ato de tortura ou qualquer outro tratamento ou pena cruel, desumano ou degradante.",
+        "ok": false,
+        "erro": "",
+        "motivo": "Está de acordo com o art. 5º do Código de Conduta."
+      }
+    ],
+    "resolucao": "A alternativa C é a incorreta. O Código de Conduta não autoriza o agente a usar a força sempre que a considerar necessária e na medida que desejar; exige necessidade estrita e extensão limitada ao cumprimento do dever. A, B e D reproduzem, respectivamente, os arts. 1º, 2º e 5º.",
+    "base": "Apostila local 'Apostila Direitos Humanos CFS - Vol. I.pdf', seção 'Aplicação da Lei/Código de Conduta', no corpus all_materials_corpus.txt (linhas 20435–20565); confirmação independente em 'Code of Conduct for Law Enforcement Officials', arts. 1, 2, 3 e 5, OHCHR.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.99,
+      "source_title": "Code of Conduct for Law Enforcement Officials",
+      "source_location": "United Nations General Assembly Resolution 34/169 (17 Dec. 1979), Articles 1, 2, 3 and 5; Article 3 on use of force",
+      "source_url": "https://www.ohchr.org/en/instruments-mechanisms/instruments/code-conduct-law-enforcement-officials",
+      "candidate_mark": "C",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": "Correções evidentes: 'lel' e 'ei' foram normalizados para 'lei'; o fragmento OCR 'Os:' foi reintegrado como 'Os funcionários...' no início da alternativa C. O marcador (C) estava ausente no trecho OCR, mas a alternativa foi recuperada pela sequência A–D e pelo DOCX.",
+      "note": "A entrada do manifesto confirma file1-q017, questão 17, ano 2022 e marcação candidata C, explicitamente não oficial; o índice de matéria estava 'por classificar'. A questão foi localizada no DOCX do arquivo 1 nas páginas 7–8 do DOCX (imagem IMG-20261012-WA0008; cabeçalho 'PÁGINA 4 DE 17'). O OCR mistura texto da questão 21 entre B e C, mas o enunciado e as quatro alternativas são recuperáveis no DOCX. O arquivo 2 declara gabarito de conferência em branco."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 17",
+    "source_url": "https://www.ohchr.org/en/instruments-mechanisms/instruments/code-conduct-law-enforcement-officials"
+  },
+  {
+    "id": "cfs30-file1-q018",
+    "disc": "Direito Administrativo",
+    "assunto": "Improbidade administrativa",
+    "enunciado": "A imoralidade administrativa qualificada pelo “enriquecimento ilícito, prejuízo ao erário ou ofensa aos princípios da administração pública” é chamada de:",
+    "alts": [
+      {
+        "t": "Probidade Administrativa.",
+        "ok": false,
+        "erro": "Probidade Administrativa",
+        "motivo": "Probidade é o dever ou valor protegido; não é a denominação do ato ilícito descrito no enunciado."
+      },
+      {
+        "t": "Boa-fé",
+        "ok": false,
+        "erro": "Boa-fé",
+        "motivo": "Boa-fé é um padrão de conduta, não a classificação legal dos atos de enriquecimento ilícito, lesão ao erário ou ofensa a princípios."
+      },
+      {
+        "t": "Preclusão Administrativa.",
+        "ok": false,
+        "erro": "Preclusão Administrativa",
+        "motivo": "Preclusão é a perda de uma faculdade processual pelo decurso do prazo ou prática de ato incompatível; não corresponde ao ilícito descrito."
+      },
+      {
+        "t": "Improbidade Administrativa.",
+        "ok": true,
+        "erro": "",
+        "motivo": "A Lei nº 8.429/1992 denomina atos de improbidade as condutas tipificadas nos arts. 9º, 10 e 11, abrangendo enriquecimento ilícito, prejuízo ao erário e atentado contra princípios da administração pública."
+      }
+    ],
+    "resolucao": "A alternativa D é correta. A Lei nº 8.429/1992 trata como atos de improbidade administrativa as condutas dos arts. 9º, 10 e 11: enriquecimento ilícito, dano ao erário e violação dos princípios da Administração Pública. A Lei nº 14.230/2021 já vigorava na data da prova (2022) e passou a exigir conduta dolosa, mas não alterou a identificação da resposta D.",
+    "base": "Fonte local: Apostila Processos e Procedimentos Administrativos CFS T31, seção 3.4 — Responsabilidade por Improbidade Administrativa, p. 10 (trecho no corpus local all_materials_corpus.txt, linhas OCR 65222–65235), que enumera enriquecimento ilícito, prejuízo ao erário e atentado contra princípios como espécies de atos de improbidade. Checagem cruzada: Lei nº 8.429/1992 compilada, art. 1º, §1º, e arts. 9º, 10 e 11, Planalto.",
+    "validation": {
+      "status": "validated",
+      "confidence": 0.99,
+      "source_title": "Lei nº 8.429, de 2 de junho de 1992 — texto compilado (Lei de Improbidade Administrativa)",
+      "source_location": "Planalto, art. 1º, §1º, e Capítulo II, Seções I–III (arts. 9º, 10 e 11); conferência local na seção 3.4, p. 10 da apostila Processos e Procedimentos Administrativos CFS T31",
+      "source_url": "https://www.planalto.gov.br/ccivil_03/leis/l8429compilada.htm",
+      "candidate_mark": "D",
+      "candidate_mark_agrees": true,
+      "ocr_corrections": [
+        "Corrigido “llíctto” para “ilícito” no enunciado, erro evidente de OCR.",
+        "Restituído o parêntese de “(D)” na alternativa D, ausente na linha OCR; confirmado no DOCX original.",
+        "Mantida a redação das quatro alternativas; apenas normalizada a pontuação final quando necessário."
+      ],
+      "note": "O manifesto candidate_items.json confirma file1-q018, prova 1, número 18, ano 2022 e marcação candidata D; classifica a matéria como a identificar. O DOCX localiza a questão na p. 8 do DOCX, sob “Página 3 — questões da imagem IMG-20261012-WA0008”/“PÁGINA 4 DE 17”. O índice do arquivo 2 foi conferido: seus gabaritos estão em branco e suas páginas/matérias referem-se às 22 provas do anexo, não substituindo a marcação de file1. A alteração da Lei nº 14.230/2021 já era vigente em 2022, mas não cria ambiguidade quanto à alternativa D."
+    },
+    "colecao": "CFS 30 · Provas anteriores",
+    "origem": "Provão CFS 30 · 100 questões · 2022 · questão 18",
+    "source_url": "https://www.planalto.gov.br/ccivil_03/leis/l8429compilada.htm"
+  }
+]

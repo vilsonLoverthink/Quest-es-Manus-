@@ -1,27 +1,33 @@
-# Questões Manus — CFS 31
+# Banco de Questões CFS 31 — Questões Manus
 
-Aplicativo interativo de estudo para o Curso de Formação de Sargentos (CFS 31) da PMMS.
+App estático e responsivo para estudar as questões das apostilas do CFS 31 e provas anteriores do CFS 30.
 
-**Acesso:** https://vilsonloverthink.github.io/Quest-es-Manus-/
+## Recursos
 
-## O que oferece
+- Busca por disciplina, assunto, enunciado, alternativa, resolução e referência.
+- Filtros compactos em um único controle recolhível.
+- Filtro de coleção para separar as apostilas do CFS 31 das provas anteriores do CFS 30.
+- Prática e simulados: a alternativa é apenas selecionada no primeiro toque; a tentativa só é gravada ao tocar em **Conferir resposta**.
+- O simulado mantém o gabarito oculto até terminar a rodada.
+- No Banco, abrir uma questão não responde nem revela o gabarito: **Responder questão** e **Consultar gabarito e resolução** são ações separadas.
+- Ao errar, a aplicação mostra a resposta correta, justificativa e referência; quando o banco identifica o trecho incorreto, ele aparece destacado em vermelho claro e riscado.
+- Favoritas e histórico de tentativas são guardados somente no `localStorage` do navegador.
+- O modo **Leitura** mostra uma questão por página, permite ajustar a fonte e salva a posição no aparelho; o shell e as questões carregadas podem ser usados offline.
+- No Chrome para Android, use **Instalar no Android** ou o menu ⋮ → **Instalar app/Adicionar à tela inicial** para abrir em tela cheia.
+- Gabaritos, edições e arquivamentos globais exigem conexão; cada ação solicita fonte e justificativa, usa controle de versão e mantém histórico compartilhado.
 
-- **Praticar:** selecione uma alternativa e confirme em **Conferir resposta**; só então a tentativa é registrada. Ao errar, o app mostra a correta, a justificativa, a resolução e a referência disponível. O trecho incorreto fornecido pelo banco aparece riscado e realçado em vermelho claro.
-- **Simulado:** escolha respostas e confirme cada uma sem ver o gabarito durante a rodada; veja o resultado e revise erros ao terminar.
-- **Banco:** abrir uma questão não a responde nem revela o gabarito. **Responder questão** e **Consultar gabarito e resolução** são opções separadas.
-- **Filtros:** disciplina e assunto ficam dentro de um único controle recolhível, ao lado da busca.
-- **Meu progresso:** histórico de tentativas, acertos, erros e favoritas, guardados somente no navegador utilizado.
+O banco-base contém 570 questões do CFS 31 em 8 disciplinas. Foram identificados 526 candidatos nos dois DOCX do CFS 30; somente 15 itens tiveram enunciado, quatro alternativas e uma resposta confirmados na primeira rodada. Três itens dessa rodada ficaram pendentes por texto/alternativas incompletos, e os outros 508 candidatos ainda não foram revisados. Nenhum candidato pendente foi tratado como correto nem entrou em simulados. Cada questão incorporada mantém resolução e referência rastreável.
 
-O banco disponível tem **570 questões em 8 disciplinas**: Armamento e Munição I (43), Aspectos Culturais das Etnias Indígenas (80), Atendimento Pré-Hospitalar (66), Direito Penal (83), Direitos Humanos (116), Legislação de Trânsito (19), Ordem Unida (81) e Uso da Força (82). As referências e resoluções registradas são exibidas para consulta; confira as apostilas e a legislação vigente.
+## Executar localmente
 
-## Provão do CFS 30
+```bash
+python3 -m http.server 8765 --bind 0.0.0.0
+```
 
-As 100 questões adicionais do arquivo `Prova_Questoes_1_a_100_Editavel.docx` ainda não estão no app. O arquivo de origem não ficou acessível para esta sessão; a integração depende de receber o DOCX para extrair, conferir o gabarito e validar as referências nas apostilas antes de publicar as questões.
+Abra `http://localhost:8765/`. O JSON é carregado via HTTP; não abra `index.html` diretamente como arquivo local.
 
-## Privacidade e execução local
+## Dados
 
-As respostas e favoritas ficam no `localStorage` do navegador; não há conta nem envio de progresso ao servidor. Para executar localmente, sirva esta pasta por HTTP, por exemplo com `python3 -m http.server 8765`, e abra `http://localhost:8765`.
+`data/questions.json` contém, sem alterações, o banco-base do CFS 31. `data/questions_cfs30.json` é um suplemento separado carregado pelo aplicativo. `extract_bank.py` permite regenerar o JSON-base a partir de um HTML de origem sem executar scripts nele. `index.html` e o app publicados estão no repositório `Quest-es-Manus-`.
 
-## Arquivo original preservado
-
-`index-completo-backup.html` permanece arquivado sem alterações. Ele contém 454 questões de 7 disciplinas; essas 454 estão idênticas no banco interativo, que inclui mais 116 questões de Direitos Humanos.
+`tools/import_validated_cfs30.py` processa os arquivos de revisão individual sem sobrescrever o banco-base. Só anexa itens com quatro alternativas, exatamente uma correta, referência rastreável e confiança mínima de 0,80; questões pendentes e duplicadas ficam fora do banco pontuado. `data/questions_cfs30_pending.json` é o suplemento separado para futuras questões legíveis, com quatro alternativas, mas sem resposta confirmada; o app permite cadastrar manualmente um gabarito global com fonte e justificativa. Por padrão, o importador grava `data/questions_cfs30.json` e gera `reports/cfs30-validation.csv` para auditoria.
