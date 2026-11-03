@@ -1,12 +1,12 @@
 # Banco de Questões CFS 31 — Questões Manus
 
-App estático e responsivo para estudar as questões das apostilas do CFS 31 e provas anteriores do CFS 30.
+App estático e responsivo para estudar as questões das apostilas do CFS 31, da coleção Todas as Apostilas e das provas anteriores do CFS 30.
 
 ## Recursos
 
 - Busca por disciplina, assunto, enunciado, alternativa, resolução e referência.
 - Filtros compactos em um único controle recolhível.
-- Filtro de coleção para separar as apostilas do CFS 31 das provas anteriores do CFS 30.
+- Filtro de coleção para separar o banco-base CFS 31, o Index Todas as Apostilas e as provas anteriores do CFS 30.
 - Prática e simulados: a alternativa é apenas selecionada no primeiro toque; a tentativa só é gravada ao tocar em **Conferir resposta**.
 - O simulado mantém o gabarito oculto até terminar a rodada.
 - No Banco, abrir uma questão não responde nem revela o gabarito: **Responder questão** e **Consultar gabarito e resolução** são ações separadas.
@@ -18,6 +18,8 @@ App estático e responsivo para estudar as questões das apostilas do CFS 31 e p
 
 O banco-base contém 570 questões do CFS 31 em 8 disciplinas. Foram identificados 526 candidatos nos dois DOCX do CFS 30; somente 15 itens tiveram enunciado, quatro alternativas e uma resposta confirmados na primeira rodada. Três itens dessa rodada ficaram pendentes por texto/alternativas incompletos, e os outros 508 candidatos ainda não foram revisados. Nenhum candidato pendente foi tratado como correto nem entrou em simulados. Cada questão incorporada mantém resolução e referência rastreável.
 
+O Index `index (1).html`, carregado em 03/11/2026, contém 2.466 questões. As 570 questões idênticas ao banco-base não são duplicadas; outras 1.896 formam a coleção suplementar **Todas as Apostilas**, incluindo 1.667 questões de quatro alternativas e 229 itens de Certo/Errado com duas alternativas. A importação preserva os gabaritos, resoluções e referências apresentados no Index e não os descreve como validados individualmente por uma nova conferência externa. Consulte a referência de cada questão e use **Alterar gabarito desta questão** para registrar uma correção fundamentada para toda a turma.
+
 ## Executar localmente
 
 ```bash
@@ -28,6 +30,8 @@ Abra `http://localhost:8765/`. O JSON é carregado via HTTP; não abra `index.ht
 
 ## Dados
 
-`data/questions.json` contém, sem alterações, o banco-base do CFS 31. `data/questions_cfs30.json` é um suplemento separado carregado pelo aplicativo. `extract_bank.py` permite regenerar o JSON-base a partir de um HTML de origem sem executar scripts nele. `index.html` e o app publicados estão no repositório `Quest-es-Manus-`.
+`data/questions.json` contém, sem alterações, o banco-base do CFS 31. `data/questions_cfs30.json` é o suplemento separado do CFS 30. `data/questions_todas_apostilas.json` contém somente os 1.896 itens inéditos extraídos do novo Index. `extract_bank.py` e `tools/import_todas_apostilas.py` leem arrays JSON de HTML sem executar seus scripts. `index.html` e o app publicados estão no repositório `Quest-es-Manus-`.
 
 `tools/import_validated_cfs30.py` processa os arquivos de revisão individual sem sobrescrever o banco-base. Só anexa itens com quatro alternativas, exatamente uma correta, referência rastreável e confiança mínima de 0,80; questões pendentes e duplicadas ficam fora do banco pontuado. `data/questions_cfs30_pending.json` é o suplemento separado para futuras questões legíveis, com quatro alternativas, mas sem resposta confirmada; o app permite cadastrar manualmente um gabarito global com fonte e justificativa. Por padrão, o importador grava `data/questions_cfs30.json` e gera `reports/cfs30-validation.csv` para auditoria.
+
+`tools/import_todas_apostilas.py` rejeita IDs em conflito, alternativas ausentes, gabaritos não únicos e itens sem resolução/referência. O app e a API preservam a quantidade de alternativas de cada questão: quatro no banco-base/CFS 30 e duas ou quatro na coleção Todas as Apostilas.

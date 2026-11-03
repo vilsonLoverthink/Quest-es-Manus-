@@ -83,6 +83,7 @@
 .correction-warning{padding:11px;border-left:3px solid var(--amber,#d5a646);background:#faf5e8}
 .dialog-input{width:100%;min-height:42px;padding:10px;border:1px solid #cbd4cd;border-radius:8px;font:14px/1.45 var(--sans,Arial,sans-serif)}
 .correction-fieldset{display:grid;gap:8px;border:1px solid #dfe4dd;border-radius:9px;padding:12px}
+.edit-alternative-list{display:grid;gap:8px}
 .correction-choice{display:grid;grid-template-columns:auto 26px minmax(0,1fr);gap:9px;align-items:start;padding:8px;border-radius:7px;background:#f7f7f2;font-size:12px;line-height:1.5}
 .dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:12px}
 .key-history-details{margin-top:18px;padding-top:12px;border-top:1px solid #e3e7e3}

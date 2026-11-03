@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'questoes-manus-cfs31-';
-const CACHE_NAME = `${CACHE_PREFIX}v2`;
+const CACHE_NAME = `${CACHE_PREFIX}v3`;
 const BASE_URL = new URL('.', self.registration.scope);
 const REQUIRED_ASSETS = [
   'index.html',
@@ -13,6 +13,7 @@ const REQUIRED_ASSETS = [
   'assets/icon-512.png',
   'assets/brazil-flag.jpg',
   'data/questions.json',
+  'data/questions_todas_apostilas.json',
 ].map(path => new URL(path, BASE_URL).href);
 const OPTIONAL_ASSETS = [
   'data/questions_cfs30.json',

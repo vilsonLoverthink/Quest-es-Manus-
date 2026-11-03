@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#102d27">
   <meta name="application-name" content="Questões Manus — CFS 31">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="description" content="Banco interativo de questões do CFS 31 e coleção de provas anteriores do CFS 30.">
-  <title>Banco de Questões — CFS 31 + CFS 30</title>
+  <meta name="description" content="Banco interativo com questões do CFS 31, do Index Todas as Apostilas e provas anteriores do CFS 30.">
+  <title>Banco de Questões — CFS 31 + Todas as Apostilas + CFS 30</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <link rel="icon" type="image/svg+xml" href="assets/cfs31-icon.svg">
@@ -21,7 +21,7 @@
   <header class="topbar">
     <a class="brand" href="#inicio" aria-label="Banco de Questões CFS 31, início">
       <span class="brand-mark"><span>31</span></span>
-      <span class="brand-name"><strong>BIZUS DE PROVA</strong><small>CFS 31 + CFS 30 · BANCO DE QUESTÕES</small></span>
+      <span class="brand-name"><strong>BIZUS DE PROVA</strong><small>CFS 31 + TODAS AS APOSTILAS + CFS 30</small></span>
       <img class="flag" src="assets/brazil-flag.jpg" alt="" width="33" height="23">
     </a>
     <nav class="main-nav" aria-label="Navegação principal">
@@ -37,9 +37,9 @@
   <main id="inicio" class="page-shell">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-line"></span> CADERNO DE TREINO · CFS 31 + CFS 30</p>
+        <p class="eyebrow"><span class="eyebrow-line"></span> CADERNO DE TREINO · CFS 31 + TODAS AS APOSTILAS + CFS 30</p>
         <h1 id="hero-title">Estude. <em>Responda.</em><br>Avance com confiança.</h1>
-        <p>Questões das apostilas do CFS 31 e provas anteriores do CFS 30, com prática, simulados e acompanhamento privado do seu progresso.</p>
+        <p>Questões do CFS 31, do Index Todas as Apostilas e de provas anteriores do CFS 30, com prática, simulados e acompanhamento privado do seu progresso.</p>
       </div>
       <div class="hero-score" aria-label="Quantidade de questões e disciplinas">
         <div class="hero-score-ring"><span id="hero-total">—</span><small>questões</small></div>
@@ -131,11 +131,8 @@
       <label class="field-label" for="edit-question-prompt">Enunciado</label>
       <textarea id="edit-question-prompt" class="dialog-input" rows="5" maxlength="5000" required></textarea>
       <fieldset class="correction-fieldset">
-        <legend>Quatro alternativas (a ordem e o gabarito permanecem separados)</legend>
-        <label class="field-label" for="edit-question-option-0">Alternativa A</label><textarea id="edit-question-option-0" class="dialog-input" rows="2" maxlength="1500" required></textarea>
-        <label class="field-label" for="edit-question-option-1">Alternativa B</label><textarea id="edit-question-option-1" class="dialog-input" rows="2" maxlength="1500" required></textarea>
-        <label class="field-label" for="edit-question-option-2">Alternativa C</label><textarea id="edit-question-option-2" class="dialog-input" rows="2" maxlength="1500" required></textarea>
-        <label class="field-label" for="edit-question-option-3">Alternativa D</label><textarea id="edit-question-option-3" class="dialog-input" rows="2" maxlength="1500" required></textarea>
+        <legend>Alternativas da questão (a quantidade original será preservada)</legend>
+        <div id="edit-question-options" class="edit-alternative-list"></div>
       </fieldset>
       <label class="field-label" for="edit-question-resolution">Resolução (opcional)</label>
       <textarea id="edit-question-resolution" class="dialog-input" rows="3" maxlength="5000"></textarea>
@@ -185,7 +182,7 @@
   </dialog>
 
   <footer class="site-footer">
-    <p><strong>Material de estudo.</strong> Confira a referência indicada em cada questão e a legislação vigente; este aplicativo não substitui as apostilas nem valida automaticamente atualizações normativas.</p>
+    <p><strong>Material de estudo.</strong> Confira a referência indicada em cada questão e a legislação vigente; este aplicativo não substitui as apostilas nem valida automaticamente atualizações normativas. Os gabaritos da coleção Todas as Apostilas são os marcados no Index de origem; divergências podem ser corrigidas globalmente com fonte e justificativa.</p>
     <span>Dados e progresso permanecem neste dispositivo.</span>
   </footer>
 </body>

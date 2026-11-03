@@ -656,12 +656,13 @@ async function init(){
     const supplementErrors=[];
     const cfs30Questions=await loadOptionalQuestionFile('data/questions_cfs30.json',supplementErrors);
     const pendingQuestions=await loadOptionalQuestionFile('data/questions_cfs30_pending.json',supplementErrors);
-    questions=[...baseQuestions,...cfs30Questions,...pendingQuestions];
+    const allApostilasQuestions=await loadOptionalQuestionFile('data/questions_todas_apostilas.json',supplementErrors);
+    questions=[...baseQuestions,...cfs30Questions,...pendingQuestions,...allApostilasQuestions];
     const ids=new Set();
     questions.forEach(q=>{
       if(!q||typeof q.id!=='string'||ids.has(q.id))throw new Error(`ID ausente ou duplicado: ${q?.id||'(vazio)'}`);
       ids.add(q.id);
-      if(!Array.isArray(q.alts)||q.alts.length!==4)throw new Error(`${q.id}: esperadas exatamente quatro alternativas.`);
+      if(!Array.isArray(q.alts)||![2,4].includes(q.alts.length))throw new Error(`${q.id}: esperadas duas ou quatro alternativas.`);
       const marked=q.alts.filter(option=>option?.ok===true).length;
       if(marked!==1&&!(marked===0&&q.keyStatus==='pending'))throw new Error(`${q.id}: precisa ter exatamente um gabarito ou estar explicitamente pendente.`);
     });

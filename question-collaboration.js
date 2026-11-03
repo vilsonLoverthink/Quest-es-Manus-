@@ -149,9 +149,22 @@
     openingVersion = Number(currentState(question.id).version || 0);
     document.getElementById('edit-question-id').textContent = `Questão ${question.id} · ${question.disc || 'Sem disciplina'}`;
     document.getElementById('edit-question-prompt').value = question.enunciado || '';
+    const alternativesHost = document.getElementById('edit-question-options');
+    alternativesHost.replaceChildren();
     question.alts.forEach((alternative, index) => {
-      const input = document.getElementById(`edit-question-option-${index}`);
-      if (input) input.value = asText(alternative?.t).replace(/==/g, '');
+      const letter = String.fromCharCode(65 + index);
+      const label = document.createElement('label');
+      label.className = 'field-label';
+      label.htmlFor = `edit-question-option-${index}`;
+      label.textContent = `Alternativa ${letter}`;
+      const input = document.createElement('textarea');
+      input.id = `edit-question-option-${index}`;
+      input.className = 'dialog-input';
+      input.rows = 2;
+      input.maxLength = 1500;
+      input.required = true;
+      input.value = asText(alternative?.t).replace(/==/g, '');
+      alternativesHost.append(label, input);
     });
     document.getElementById('edit-question-resolution').value = question.resolucao || '';
     document.getElementById('edit-question-reference').value = asText(question.base);
@@ -173,14 +186,16 @@
     const sourceUrl = document.getElementById('edit-question-source-url').value.trim();
     const status = document.getElementById('edit-question-status');
     const submit = document.getElementById('save-question-edit');
+    const expectedCount = activeQuestion.alts.length;
+    const alternativeInputs = [...document.querySelectorAll('#edit-question-options textarea')];
     const content = {
       prompt: document.getElementById('edit-question-prompt').value.trim(),
-      alternatives: [0, 1, 2, 3].map(index => document.getElementById(`edit-question-option-${index}`).value.trim()),
+      alternatives: alternativeInputs.map(input => input.value.trim()),
       resolution: document.getElementById('edit-question-resolution').value.trim(),
       reference: document.getElementById('edit-question-reference').value.trim(),
       sourceUrl,
     };
-    if (!content.prompt || content.alternatives.some(value => !value)) { status.textContent = 'Preencha o enunciado e as quatro alternativas.'; return; }
+    if (!content.prompt || content.alternatives.length !== expectedCount || ![2, 4].includes(expectedCount) || content.alternatives.some(value => !value)) { status.textContent = `Preencha o enunciado e as ${expectedCount} alternativas.`; return; }
     if (source.length < 5 || rationale.length < 10) { status.textContent = 'Informe uma fonte e uma justificativa (mínimo 10 caracteres).'; return; }
     if (sourceUrl) {
       try { if (!['http:', 'https:'].includes(new URL(sourceUrl).protocol)) throw new Error(); }
