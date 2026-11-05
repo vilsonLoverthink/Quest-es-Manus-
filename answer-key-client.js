@@ -65,7 +65,7 @@
 
   async function sync() {
     try {
-      const response = await fetch(API_URL, { method: 'GET', cache: 'no-store', headers: { Accept: 'application/json' } });
+      const response = await fetch(API_URL, { method: 'GET', cache: 'no-store', credentials: 'include', headers: { Accept: 'application/json' } });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       if (!Array.isArray(data.overrides)) throw new Error('Resposta da API inválida.');
@@ -115,7 +115,7 @@
     loading.textContent = 'Carregando histórico…';
     host.appendChild(loading);
     try {
-      const response = await fetch(`${API_URL}/${encodeURIComponent(questionId)}/history`, { cache: 'no-store', headers: { Accept: 'application/json' } });
+      const response = await fetch(`${API_URL}/${encodeURIComponent(questionId)}/history`, { cache: 'no-store', credentials: 'include', headers: { Accept: 'application/json' } });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       host.replaceChildren();
@@ -174,7 +174,7 @@
     status.textContent = 'Publicando correção para todos…';
     try {
       const response = await fetch(`${API_URL}/${encodeURIComponent(activeQuestion.id)}`, {
-        method: 'POST',
+        method: 'POST', credentials: 'include',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ correctIndex: Number(selected.value), expectedVersion: openingVersion, source, rationale }),
       });

@@ -650,6 +650,8 @@ async function init(){
   const readerSettings=readReaderSettings();state.readerQuestionId=readerSettings.questionId;state.readerFontScale=readerSettings.fontScale;
   setupPwa();
   try{
+    const authResult = await window.CFS31Auth?.ready;
+    if (!authResult?.user) return;
     const response=await fetch('data/questions.json');if(!response.ok)throw new Error(`HTTP ${response.status}`);
     const baseQuestions=await response.json();
     if(!Array.isArray(baseQuestions)||!baseQuestions.length)throw new Error('O arquivo de questões está vazio.');
@@ -669,7 +671,11 @@ async function init(){
     window.CFS31QuestionCollab?.setQuestions(questions);
     const counts=new Map();questions.forEach(q=>counts.set(q.disc,(counts.get(q.disc)||0)+1));
     disciplines=[...counts].map(([name,count])=>({name,count})).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
-    render();setStatus(supplementErrors.length?`Alguns suplementos não foram carregados: ${supplementErrors.join(' · ')}`:'');
+    render();
+    const notices = [];
+    if (supplementErrors.length) notices.push(`Alguns suplementos não foram carregados: ${supplementErrors.join(' · ')}`);
+    if (authResult.offline) notices.push('Modo offline: progresso local disponível; contador e correções globais precisam de conexão.');
+    setStatus(notices.join(' '));
   }catch(error){setStatus(`Não foi possível carregar o banco: ${error.message}. Abra esta página por um servidor HTTP, não como arquivo local.`);viewRoot.replaceChildren();}
 }
 init();

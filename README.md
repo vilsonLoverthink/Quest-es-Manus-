@@ -15,10 +15,14 @@ App estático e responsivo para estudar as questões das apostilas do CFS 31, da
 - O modo **Leitura** mostra uma questão por página, permite ajustar a fonte e salva a posição no aparelho; o shell e as questões carregadas podem ser usados offline.
 - No Chrome para Android, use **Instalar no Android** ou o menu ⋮ → **Instalar app/Adicionar à tela inicial** para abrir em tela cheia.
 - Gabaritos, edições e arquivamentos globais exigem conexão; cada ação solicita fonte e justificativa, usa controle de versão e mantém histórico compartilhado.
+- O acesso ao app usa uma conta Manus, registra o nome do perfil, quantidade de acessos e última atividade, e apresenta contador de participantes ativos. O painel ADM pede o PIN configurado no servidor, pagina toda a lista de participantes e limita tentativas por conta Manus no MySQL; não guardamos e-mail ou IP.
+- A tela de entrada informa que o app é para contas Manus. A autenticação controla a interface e as mudanças na API, mas os JSONs de questões publicados no GitHub continuam acessíveis por link direto; não é um bloqueio dos arquivos.
 
 O banco-base contém 570 questões do CFS 31 em 8 disciplinas. Foram identificados 526 candidatos nos dois DOCX do CFS 30; somente 15 itens tiveram enunciado, quatro alternativas e uma resposta confirmados na primeira rodada. Três itens dessa rodada ficaram pendentes por texto/alternativas incompletos, e os outros 508 candidatos ainda não foram revisados. Nenhum candidato pendente foi tratado como correto nem entrou em simulados. Cada questão incorporada mantém resolução e referência rastreável.
 
 O Index `index (1).html`, carregado em 03/11/2026, contém 2.466 questões. As 570 questões idênticas ao banco-base não são duplicadas; outras 1.896 formam a coleção suplementar **Todas as Apostilas**, incluindo 1.667 questões de quatro alternativas e 229 itens de Certo/Errado com duas alternativas. A importação preserva os gabaritos, resoluções e referências apresentados no Index e não os descreve como validados individualmente por uma nova conferência externa. Consulte a referência de cada questão e use **Alterar gabarito desta questão** para registrar uma correção fundamentada para toda a turma.
+
+Depois de autenticar-se online, o app mantém os bancos já carregados disponíveis offline para estudo local por até sete dias quando a rede ou o serviço está indisponível. Se o servidor responder que a sessão expirou (HTTP 401), o app apaga o perfil offline e exige novo login. O contador de acessos, o login e as mudanças globais precisam de conexão. O histórico de progresso das questões permanece local no navegador e não é compartilhado entre participantes.
 
 ## Executar localmente
 

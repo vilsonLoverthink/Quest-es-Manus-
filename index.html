@@ -13,8 +13,10 @@
   <link rel="icon" type="image/svg+xml" href="assets/cfs31-icon.svg">
   <link rel="icon" type="image/jpeg" href="assets/brazil-flag.jpg">
   <link rel="stylesheet" href="styles.css">
+  <script defer src="auth-client.js"></script>
   <script defer src="answer-key-client.js"></script>
   <script defer src="question-collaboration.js"></script>
+  <script defer src="access-client.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
@@ -24,7 +26,7 @@
       <span class="brand-name"><strong>BIZUS DE PROVA</strong><small>CFS 31 + TODAS AS APOSTILAS + CFS 30</small></span>
       <img class="flag" src="assets/brazil-flag.jpg" alt="" width="33" height="23">
     </a>
-    <nav class="main-nav" aria-label="Navegação principal">
+    <nav class="main-nav" id="main-navigation" aria-label="Navegação principal" hidden>
       <button class="nav-tab is-active" type="button" aria-current="page" data-view="practice">Praticar</button>
       <button class="nav-tab" type="button" data-view="simulado">Simulado</button>
       <button class="nav-tab" type="button" data-view="bank">Banco</button>
@@ -32,9 +34,27 @@
       <button class="nav-tab" type="button" data-view="progress">Meu progresso</button>
     </nav>
     <button class="install-app-button" id="install-app" type="button">Instalar no Android</button>
+    <div class="account-controls" id="account-controls" hidden>
+      <span class="signed-user-name" id="signed-user-name"></span>
+      <span class="active-access-count" id="active-access-count" aria-live="polite">Ativos: —</span>
+      <button class="button account-button" id="admin-access-open" type="button">ADM</button>
+      <button class="button account-button" id="sign-out" type="button">Sair</button>
+    </div>
   </header>
 
-  <main id="inicio" class="page-shell">
+  <section id="login-screen" class="login-screen" aria-labelledby="login-title">
+    <div class="login-card">
+      <p class="eyebrow-dark">ACESSO AO CADERNO DE TREINO</p>
+      <h1 id="login-title">Entre para estudar</h1>
+      <p>Use sua conta Manus. Não há cadastro de senha próprio nem login Google neste app.</p>
+      <button class="button primary login-button" id="manus-login" type="button">Entrar com conta Manus</button>
+      <p class="login-privacy">Ao entrar, o app registra o nome do perfil, a quantidade de acessos e o horário da última atividade; esses dados ficam disponíveis ao administrador. Não guardamos e-mail, IP ou senha. Os arquivos de questões hospedados no GitHub continuam públicos para acesso direto, mesmo sem entrar no app.</p>
+      <p id="auth-status" class="dialog-status" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <main id="inicio" class="page-shell" hidden>
+    <p id="auth-offline-notice" class="offline-login-notice" role="status" aria-live="polite" hidden></p>
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow"><span class="eyebrow-line"></span> CADERNO DE TREINO · CFS 31 + TODAS AS APOSTILAS + CFS 30</p>
@@ -181,9 +201,38 @@
     </div>
   </dialog>
 
+  <dialog id="admin-access-dialog" class="app-dialog admin-access-dialog" aria-labelledby="admin-access-title">
+    <form id="admin-access-form">
+      <p class="eyebrow-dark">RELATÓRIO RESTRITO</p>
+      <h2 id="admin-access-title">Acessos do aplicativo</h2>
+      <label class="field-label" for="admin-access-pin">PIN do administrador</label>
+      <input id="admin-access-pin" class="dialog-input" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="off" required>
+      <p id="admin-access-status" class="dialog-status" role="status" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button class="button" id="admin-access-close" type="button">Fechar</button>
+        <button class="button primary" id="admin-access-submit" type="submit">Consultar relatório</button>
+      </div>
+      <section id="admin-access-report" class="admin-access-report" hidden>
+        <div class="metric-grid">
+          <article class="metric-card"><small>Acessos registrados</small><strong id="access-report-total">0</strong></article>
+          <article class="metric-card"><small>Participantes ativos (5 min)</small><strong id="access-report-active">0</strong></article>
+        </div>
+        <p id="access-report-empty" class="empty-state" hidden>Nenhum acesso foi registrado.</p>
+        <div class="access-table-wrap">
+          <table class="access-table">
+            <thead><tr><th>Nome</th><th>Acessos</th><th>Status</th><th>Último login</th><th>Última atividade</th></tr></thead>
+            <tbody id="access-report-users"></tbody>
+          </table>
+        </div>
+        <p id="access-report-page" class="empty-state" aria-live="polite"></p>
+        <button class="button" id="access-report-load-more" type="button" hidden>Carregar mais participantes</button>
+      </section>
+    </form>
+  </dialog>
+
   <footer class="site-footer">
     <p><strong>Material de estudo.</strong> Confira a referência indicada em cada questão e a legislação vigente; este aplicativo não substitui as apostilas nem valida automaticamente atualizações normativas. Os gabaritos da coleção Todas as Apostilas são os marcados no Index de origem; divergências podem ser corrigidas globalmente com fonte e justificativa.</p>
-    <span>Dados e progresso permanecem neste dispositivo.</span>
+    <span>Progresso de estudo fica neste dispositivo; acessos são registrados no servidor.</span>
   </footer>
 </body>
 </html>

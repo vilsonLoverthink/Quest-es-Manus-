@@ -108,7 +108,7 @@
     host.replaceChildren();
     const loading = document.createElement('p'); loading.textContent = 'Carregando histórico…'; host.appendChild(loading);
     try {
-      const response = await fetch(`${API_URL}/${encodeURIComponent(questionId)}/history`, { cache: 'no-store', headers: { Accept: 'application/json' } });
+      const response = await fetch(`${API_URL}/${encodeURIComponent(questionId)}/history`, { cache: 'no-store', credentials: 'include', headers: { Accept: 'application/json' } });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json(); host.replaceChildren();
       if (!Array.isArray(data.history) || !data.history.length) {
@@ -123,7 +123,7 @@
   }
   async function refresh() {
     try {
-      const response = await fetch(API_URL, { cache: 'no-store', headers: { Accept: 'application/json' } });
+      const response = await fetch(API_URL, { cache: 'no-store', credentials: 'include', headers: { Accept: 'application/json' } });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       if (!Array.isArray(data.questions)) throw new Error('Resposta da API inválida.');
@@ -204,7 +204,7 @@
     submit.disabled = true; status.textContent = 'Publicando edição para todos…';
     try {
       const response = await fetch(`${API_URL}/${encodeURIComponent(activeQuestion.id)}/edit`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ expectedVersion: openingVersion, content, source, rationale }),
       });
       const data = await response.json().catch(() => ({}));
@@ -249,7 +249,7 @@
     submit.disabled = true; message.textContent = 'Salvando alteração global…';
     try {
       const response = await fetch(`${API_URL}/${encodeURIComponent(activeStatusQuestion.id)}/${activeStatusAction}`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ expectedVersion: statusOpeningVersion, source, rationale }),
       });
       const data = await response.json().catch(() => ({}));
